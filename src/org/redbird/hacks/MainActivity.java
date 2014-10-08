@@ -23,7 +23,7 @@ public class MainActivity extends FragmentActivity
         topTabs = (FragmentTabHost)findViewById(android.R.id.tabhost);
         topTabs.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
-        topTabs.addTab(topTabs.newTabSpec("simple").setIndicator("Updates", getResources().getDrawable(R.drawable.right_arrow)),
+        topTabs.addTab(topTabs.newTabSpec("simple").setIndicator("Updates"),
                 UpdatesFragment.class, null);
         topTabs.addTab(topTabs.newTabSpec("contacts").setIndicator("Mentors"),
         		UpdatesFragment.class, null);
