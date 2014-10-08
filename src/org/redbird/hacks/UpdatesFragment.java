@@ -38,7 +38,8 @@ public class UpdatesFragment extends Fragment
         legendList.add(new Updates("Breakfast has arrived!","We will be serving eggs and sausage"));
         legendList.add(new Updates("Breakfast has arrived!","We will be serving eggs and sausage"));
         legendList.add(new Updates("Breakfast has arrived!","We will be serving eggs and sausage"));
-
+        
+        
         listViewUpdates = ( ListView ) rootView.findViewById( R.id.updatesFeed_List);
         listViewUpdates.setAdapter( new UpdatesListAdapter(getActivity(), R.layout.updates_listview, legendList ) );
    
