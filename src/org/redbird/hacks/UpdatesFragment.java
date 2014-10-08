@@ -1,3 +1,12 @@
+/**
+ * This fragment gets called when the app is initialized.
+ * 
+ * It references the custom ListView inside updates_fragment_layout.xml and adds items to the list.
+ * Currently, the list is static. It will be developed to pull in announcements from a Twitter feed.
+ * 
+ * @author MJ Havens <me@mjhavens.com>
+ */
+
 package org.redbird.hacks;
 
 import java.util.ArrayList;
@@ -41,6 +50,8 @@ public class UpdatesFragment extends Fragment
         
         
         listViewUpdates = ( ListView ) rootView.findViewById( R.id.updatesFeed_List);
+        
+        // This actually sets the attributes to the ListItem using the UpdatesListAdapter class.
         listViewUpdates.setAdapter( new UpdatesListAdapter(getActivity(), R.layout.updates_listview, legendList ) );
    
         listViewUpdates.setOnItemClickListener(new OnItemClickListener() {
