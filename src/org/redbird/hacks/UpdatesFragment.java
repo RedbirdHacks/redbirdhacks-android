@@ -50,7 +50,7 @@ public class UpdatesFragment extends Fragment
         // Inflate the layout for this fragment
     	rootView = inflater.inflate(R.layout.updates_fragment_layout, container, false);
     	
-    	// Get the JSON announcements in the background and set each announcement to a ListItem.
+    	// Get the JSON updates in the background and set each updates to a ListItem.
     	new GetJSONUpdates().execute(url);
 
         return rootView;
@@ -58,12 +58,14 @@ public class UpdatesFragment extends Fragment
 	
 	private class GetJSONUpdates extends AsyncTask<String, Void, UpdatesInfoFromJSON> {
 		private UpdatesInfoFromJSON updatesInfo;
-		private final String TAG_ANNOUNCEMENTS = "announcements";
-		private final String TAG_ANNOUNCEMENT_TEXT = "text";
-		private final String TAG_ANNOUNCEMENT_DATE = "date";
+		private final String TAG_UPDATES = "announcements";
+		private final String TAG_UPDATES_TEXT = "text";
+		private final String TAG_UPDATES_DATE = "date";
+		private boolean connectionFailed;
 
 		@Override
 		protected UpdatesInfoFromJSON doInBackground(String... url) {
+			connectionFailed = false;
 			DefaultHttpClient   httpclient = new DefaultHttpClient(new BasicHttpParams());
 	    	HttpPost httppost = new HttpPost(url[0]);
 	    	// Depends on your web service
@@ -92,23 +94,24 @@ public class UpdatesFragment extends Fragment
 	    	    // Convert the result String to a JSONObject.
 				JSONObject jObject = new JSONObject(jsonString);
 				
-				// Announcements is an array that contains each individual update. 
-				// Set the "announcements" tag to a JSONArray
+				// Updates is an array that contains each individual update. 
+				// Set the "updates" tag to a JSONArray
 				
-				JSONArray announcements = jObject.getJSONArray(TAG_ANNOUNCEMENTS);
+				JSONArray updates = jObject.getJSONArray(TAG_UPDATES);
 				updatesInfo = new UpdatesInfoFromJSON();
-				updatesInfo.updatesText = new String[announcements.length()];
-				updatesInfo.updatesDate = new String[announcements.length()];
+				updatesInfo.updatesText = new String[updates.length()];
+				updatesInfo.updatesDate = new String[updates.length()];
 				
-				for(int i=0; i < announcements.length(); i++)
+				for(int i=0; i < updates.length(); i++)
 				{
-					// For each announcement within the announcements array, grab the text and the date.
-					JSONObject a = announcements.getJSONObject(i);
-					updatesInfo.updatesText[i] = a.getString(TAG_ANNOUNCEMENT_TEXT);
-					updatesInfo.updatesDate[i] = a.getString(TAG_ANNOUNCEMENT_DATE);
+					// For each update within the updates JSONArray, grab the text and the date.
+					JSONObject a = updates.getJSONObject(i);
+					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
+					updatesInfo.updatesDate[i] = a.getString(TAG_UPDATES_DATE);
 
 				}
 	    	} catch (Exception e) { 
+	    		connectionFailed = true;
 	    	    e.printStackTrace();
 	    	}
 	    	finally {
@@ -121,18 +124,24 @@ public class UpdatesFragment extends Fragment
 	     protected void onPostExecute(UpdatesInfoFromJSON updatesInfo) {
 	         super.onPostExecute(updatesInfo);
 			 // This executes after the doInBackground() method is finished.
-			 // It will set all of the announcement text and dates to an item in the ListView.
+			 // It will set all of the update text and dates to an item in the ListView.
 	         
 			 listViewUpdates = ( ListView ) rootView.findViewById( R.id.updatesFeed_List);
 	         legendList = new ArrayList<Updates>();
 
-	         // For every announcement...
-	         for(int i=0; i < updatesInfo.updatesText.length; i++)
+	         // Make sure that we were able to connect to the server.
+	         if(!connectionFailed)
 	         {
-	        	 // Add the text and date to the ListView.
-	        	legendList.add(new Updates(updatesInfo.updatesText[i],updatesInfo.updatesDate[i]));
+		         // For every update...
+		         for(int i=0; i < updatesInfo.updatesText.length; i++)
+		         {
+		        	 // Add the text and date to the ListView.
+		        	legendList.add(new Updates(updatesInfo.updatesText[i],updatesInfo.updatesDate[i]));
+		         }
 	         }
-
+	         else
+		        	legendList.add(new Updates("Unable to connect to the server!","Please check your internet connection."));
+	         
 	         listViewUpdates.setAdapter( new UpdatesListAdapter(getActivity(), R.layout.updates_listview, legendList ) );
 	         listViewUpdates.setOnItemClickListener(new OnItemClickListener() {
 	            @Override
