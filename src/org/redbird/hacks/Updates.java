@@ -1,6 +1,6 @@
 
 /**
- * This POJO class stores the attributes for a single announcement.
+ * This POJO class stores the attributes for a single announcement/update.
  * 
  * @author MJ Havens
  *
@@ -9,8 +9,8 @@ package org.redbird.hacks;
 
 public class Updates
 {
-	private String	description;
-	private String	title;
+	private String	date;
+	private String	text;
 
 	/**
 	 * Basic constructor.
@@ -18,11 +18,11 @@ public class Updates
 	 * @param title - The title of the announcement item.
 	 * @param description - the description of the announcement item.
 	 */
-	public Updates(String title, String description)
+	public Updates(String text, String date)
 	{
 		super();
-		this.title = title;
-		this.description = description;
+		this.text = text;
+		this.date = date;
 	}
 	
 	/**
@@ -30,9 +30,9 @@ public class Updates
 	 * 
 	 * @return the title of an announcement.
 	 */
-	public String getTitle()
+	public String getText()
 	{
-		return title;
+		return text;
 	}
 	
 	/**
@@ -40,9 +40,9 @@ public class Updates
 	 * 
 	 * @param title the title of an announcement.
 	 */
-	public void setTitle(String title)
+	public void setText(String text)
 	{
-		this.title = title;
+		this.text = text;
 	}
 	
 	/**
@@ -50,9 +50,9 @@ public class Updates
 	 * 
 	 * @return the description of the announcement.
 	 */
-	public String getDescription()
+	public String getDate()
 	{
-		return description;
+		return date;
 	}
 	
 	/**
@@ -60,8 +60,8 @@ public class Updates
 	 * 
 	 * @return the description of the announcement.
 	 */	
-	public void setDescription(String description)
+	public void setDate(String date)
 	{
-		this.description = description;
+		this.date = date;
 	}
 }

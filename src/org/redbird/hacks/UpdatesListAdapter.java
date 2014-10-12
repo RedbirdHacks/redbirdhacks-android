@@ -1,7 +1,7 @@
 /**
- * This class is used to set the Updates attributes to a list item.
+ * This class is used to set the Updates attributes to an item in the ListView.
  * 
- * @author MJ Havens
+ * @author MJ Havens <me@mjhavens.com>
  */
 
 package org.redbird.hacks;
@@ -47,13 +47,13 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 					parent, false);
 
 		Updates update = getItem(position);
-		TextView updateTitle = (TextView) convertView
+		TextView updateText = (TextView) convertView
 				.findViewById(R.id.updateTitle);
-		updateTitle.setText(update.getTitle());
+		updateText.setText(update.getText());
 
-		TextView updateDesc = (TextView) convertView
+		TextView updateDate = (TextView) convertView
 				.findViewById(R.id.updateDesc);
-		updateDesc.setText(update.getDescription());
+		updateDate.setText(update.getDate());
 
 		// Use this if we want to set an image next to each list item.
 

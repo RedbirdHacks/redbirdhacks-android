@@ -17,7 +17,6 @@ public class MainActivity extends FragmentActivity
 {
     private FragmentTabHost	topTabs;
     
-
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 

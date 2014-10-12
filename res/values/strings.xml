@@ -2,5 +2,7 @@
 
     <string name="app_name">RedBird Hacks Android App</string>
     <string name="updates_fragment_string">Updates</string>   
+    <string name="consumer_key">SSEZUWtfdsh5NDcpqv6GiTLKP</string>
+    <string name="consumer_secret">76aGmLbTwhKvriLnZdhz94ZKYO1VXSyYaMzHn1hSTwRLHYAyzN</string>
     
 </resources>
