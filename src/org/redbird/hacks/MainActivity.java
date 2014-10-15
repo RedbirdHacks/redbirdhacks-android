@@ -12,35 +12,43 @@ package org.redbird.hacks;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.TabWidget;
 
 public class MainActivity extends FragmentActivity
 {
-    private FragmentTabHost	topTabs;
-    
+	private FragmentTabHost	topTabs;
+
 	@Override
-    protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+		super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_main);
 
-        //Initialize and setup the FragmentTabHost
-        topTabs = (FragmentTabHost)findViewById(android.R.id.tabhost);
-        topTabs.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+			// Initialize and setup the FragmentTabHost
+			topTabs = (FragmentTabHost) findViewById(android.R.id.tabhost);
+			topTabs.setup(this, getSupportFragmentManager(),
+					android.R.id.tabcontent);
 
-        // Add the three tabs to the top of the screen.
-        topTabs.addTab(topTabs.newTabSpec("Updates").setIndicator("Updates"),
-                UpdatesFragment.class, null);
-        topTabs.addTab(topTabs.newTabSpec("Mentors").setIndicator("Mentors"),
-        		UpdatesFragment.class, null);
-        topTabs.addTab(topTabs.newTabSpec("Schedule").setIndicator("Schedule"),
-        		UpdatesFragment.class, null);  
-        
-        // Use this to add a custom tab when the tab is pressed, not pressed, etc.
-        // TO DO: Make custom icons.
-        //topTabs.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.tab_custom_selector);
-        //topTabs.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.tab_custom_selector);
-        //topTabs.getTabWidget().getChildAt(2).setBackgroundResource(R.drawable.tab_custom_selector);
+			// Add the three tabs to the top of the screen.
+			topTabs.addTab(topTabs.newTabSpec("Updates")
+					.setIndicator("Updates"), UpdatesFragment.class, null);
+			topTabs.addTab(topTabs.newTabSpec("Mentors")
+					.setIndicator("Mentors"), UpdatesFragment.class, null);
+			topTabs.addTab(
+					topTabs.newTabSpec("Schedule").setIndicator("Schedule"),
+					UpdatesFragment.class, null);
 
-        
-    }
+		// Use this to add a custom tab when the tab is pressed, not pressed,
+		// etc.
+		// TO DO: Make custom icons.
+		// topTabs.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.tab_custom_selector);
+		// topTabs.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.tab_custom_selector);
+		// topTabs.getTabWidget().getChildAt(2).setBackgroundResource(R.drawable.tab_custom_selector);
+
+	}
 }

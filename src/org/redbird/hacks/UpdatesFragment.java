@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -32,7 +34,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -42,21 +43,20 @@ public class UpdatesFragment extends Fragment
 	private final String url = "http://mjhavens.com/announcements.json";
 	private ListView	listViewUpdates;
 	private  List<Updates> legendList;
-	View rootView;
+	private View rootView;
+	private UpdatesListAdapter updatesListAdapter;
+	private Timer jsonRefreshTimer;
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
     	
         // Inflate the layout for this fragment
     	rootView = inflater.inflate(R.layout.updates_fragment_layout, container, false);
-    	
-    	// Get the JSON updates in the background and set each updates to a ListItem.
-    	new GetJSONUpdates().execute(url);
-
         return rootView;
     }
 	
-	private class GetJSONUpdates extends AsyncTask<String, Void, UpdatesInfoFromJSON> {
+	private class JSONUpdates extends AsyncTask<String, Void, UpdatesInfoFromJSON> {
 		private UpdatesInfoFromJSON updatesInfo;
 		private final String TAG_UPDATES = "announcements";
 		private final String TAG_UPDATES_TEXT = "text";
@@ -127,8 +127,7 @@ public class UpdatesFragment extends Fragment
 			 // It will set all of the update text and dates to an item in the ListView.
 	         
 			 listViewUpdates = ( ListView ) rootView.findViewById( R.id.updatesFeed_List);
-	         legendList = new ArrayList<Updates>();
-
+			
 	         // Make sure that we were able to connect to the server.
 	         if(!connectionFailed)
 	         {
@@ -141,30 +140,61 @@ public class UpdatesFragment extends Fragment
 	         }
 	         else
 		        	legendList.add(new Updates("Unable to connect to the server!","Please check your internet connection."));
+	        
+	         listViewUpdates.setAdapter(updatesListAdapter);
+//	         listViewUpdates.setOnItemClickListener(new OnItemClickListener() {
+//	         @Override
+//	         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//	        	 Updates o = (Updates) parent.getItemAtPosition(position); 
+//	             Toast.makeText(getActivity(), o.getText().toString(), Toast.LENGTH_SHORT).show();
+//	         }
+//	         });    
 	         
-	         listViewUpdates.setAdapter( new UpdatesListAdapter(getActivity(), R.layout.updates_listview, legendList ) );
-	         listViewUpdates.setOnItemClickListener(new OnItemClickListener() {
-	            @Override
-	            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	                    Updates o = (Updates) parent.getItemAtPosition(position); 
-	                    Toast.makeText(getActivity(), o.getText().toString(), Toast.LENGTH_SHORT).show();
-	                    }
-	            });    
 		 }
-		 
-		
+			
 	}
 	
 	/**
-	 * This class was created so that we could pass both the 
-	 * update text and update date as an array to the onPostExecute() method of the AsyncTask.
+	 * This class was created so that we could pass both the update text and update date 
+	 * as an array to the onPostExecute() method of the AsyncTask.
 	 * 
 	 * @author MJ Havens <me@mjhavens.com>
 	 *
 	 */
-	public class UpdatesInfoFromJSON{
+	private class UpdatesInfoFromJSON{
 		String updatesText[];
 		String updatesDate[];
+	}
+	
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		//Cancel the timer if the activity is shut down or the user switches to a different fragment.
+		// We don't want to be refreshing the updates list if the user is not on that fragment.
+		if(jsonRefreshTimer != null)
+			jsonRefreshTimer.cancel();
+		Log.d("APP", "onPause");
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+    	// Get the JSON updates in the background and set each updates to a ListItem.
+    	//jsonUpdates.execute(url);
+    	Log.d("APP", "onResume");
+    	jsonRefreshTimer = new Timer();
+    	jsonRefreshTimer.scheduleAtFixedRate(new TimerTask(){
+    		@Override
+    		public void run(){
+    			Log.d("APP", "Refreshing the adapter");
+    	        legendList = new ArrayList<Updates>();
+    	    	updatesListAdapter = new UpdatesListAdapter(getActivity(), R.layout.updates_listview, legendList);
+    			new JSONUpdates().execute(url);
+    			updatesListAdapter.notifyDataSetChanged();
+    		}
+    	}, 0, 1000 * 15);
 	}
     
 }

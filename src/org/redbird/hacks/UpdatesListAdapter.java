@@ -9,13 +9,10 @@ package org.redbird.hacks;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class UpdatesListAdapter extends ArrayAdapter<Updates>
@@ -64,6 +61,7 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 		// context.getPackageName());
 		// Drawable image = context.getResources().getDrawable(imageResource);
 		// updateImage.setImageDrawable(image);
+		((ArrayAdapter) UpdatesListAdapter.this).notifyDataSetChanged();
 
 		return convertView;
 	}
