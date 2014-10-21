@@ -28,6 +28,7 @@ public class MainActivity extends FragmentActivity
   
 		super.onCreate(savedInstanceState);
 			setContentView(R.layout.activity_main);
+			Log.i("MainActivity", "onCreate");
 
 			// Initialize and setup the FragmentTabHost
 			topTabs = (FragmentTabHost) findViewById(android.R.id.tabhost);
