@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/default_padding" >
+
+    <RelativeLayout
+        android:id="@+id/rlEventHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#259b24" >
+
+        <TextView
+            android:id="@+id/tvEventTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/default_padding"
+            android:text="Event Title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvEventTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/default_padding"
+            android:text="4:30 PM" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvEventDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/rlEventHeader"
+        android:padding="@dimen/default_padding"
+        android:text="This is a very long description of an event. Breakfast is the most important meal of the day." />
+
+</RelativeLayout>
