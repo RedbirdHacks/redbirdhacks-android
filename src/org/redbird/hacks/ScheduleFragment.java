@@ -48,9 +48,8 @@ public class ScheduleFragment extends android.support.v4.app.Fragment {
 	private ScheduleEvent buildStubbedScheduleEvent() {
 
 		ScheduleEvent event = new ScheduleEvent();
-		event.setEventTitle("Some Event Title");
-		event.setEventDescription("This is a very long and detailed event description. Breakfast is the most important part of the day.");
-		event.setEventTime("4:30 PM");
+		event.setEventTitle("Registration");
+		event.setEventTime("8:00-9:00");
 		return event;
 	}
 }

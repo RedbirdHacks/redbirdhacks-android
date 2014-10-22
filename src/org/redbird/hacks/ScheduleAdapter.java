@@ -33,9 +33,6 @@ public class ScheduleAdapter extends ArrayAdapter<ScheduleEvent> {
 		TextView tvScheduleEventTitle = (TextView) convertView.findViewById(R.id.tvEventTitle);
 		tvScheduleEventTitle.setText(scheduleEvent.getEventTitle());
 
-		TextView tvScheduleEventDescription = (TextView) convertView.findViewById(R.id.tvEventDescription);
-		tvScheduleEventDescription.setText(scheduleEvent.getEventDescription());
-
 		TextView tvScheduleEventTime = (TextView) convertView.findViewById(R.id.tvEventTime);
 		tvScheduleEventTime.setText(scheduleEvent.getEventTime());
 

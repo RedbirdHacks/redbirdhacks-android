@@ -13,10 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
-import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.TabWidget;
 
 public class MainActivity extends FragmentActivity
 {
@@ -42,7 +38,7 @@ public class MainActivity extends FragmentActivity
 					.setIndicator("Mentors"), UpdatesFragment.class, null);
 			topTabs.addTab(
 					topTabs.newTabSpec("Schedule").setIndicator("Schedule"),
-					UpdatesFragment.class, null);
+					ScheduleFragment.class, null);
 
 		// Use this to add a custom tab when the tab is pressed, not pressed,
 		// etc.
