@@ -14,8 +14,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,173 +26,217 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
-
-public class UpdatesFragment extends Fragment
+public class UpdatesFragment extends Fragment implements OnRefreshListener
 {
-	private final String url = "http://mjhavens.com/announcements.json";
-	private ListView	listViewUpdates;
-	private  List<Updates> legendList;
-	private View rootView;
-	private UpdatesListAdapter updatesListAdapter;
-	private Timer jsonRefreshTimer;
-	
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-    	
-        // Inflate the layout for this fragment
-    	rootView = inflater.inflate(R.layout.updates_fragment_layout, container, false);
-        return rootView;
-    }
-	
-	private class JSONUpdates extends AsyncTask<String, Void, UpdatesInfoFromJSON> {
-		private UpdatesInfoFromJSON updatesInfo;
-		private final String TAG_UPDATES = "announcements";
-		private final String TAG_UPDATES_TEXT = "text";
-		private final String TAG_UPDATES_DATE = "date";
-		private boolean connectionFailed;
+	private final String		url				= "http://mjhavens.com/announcements.json";
+	private ListView			listViewUpdates;
+	private List<Updates>		legendList;
+	private View				rootView;
+	private UpdatesListAdapter	updatesListAdapter;
+	private SwipeRefreshLayout	swipeLayout;
+	private final int			timeToRefresh	= 15000;
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState)
+	{
+
+		// Inflate the layout for this fragment
+		rootView = inflater.inflate(R.layout.updates_fragment_layout,
+				container, false);
+
+		swipeLayout = (SwipeRefreshLayout) rootView
+				.findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorSchemeResources(R.color.redBirdHacksRed,
+				R.color.orange, R.color.darkred,
+				R.color.white);
+		return rootView;
+	}
+
+	private class JSONUpdates extends
+			AsyncTask<String, Void, UpdatesInfoFromJSON>
+	{
+		private UpdatesInfoFromJSON	updatesInfo;
+		private final String		TAG_UPDATES			= "announcements";
+		private final String		TAG_UPDATES_TEXT	= "text";
+		private final String		TAG_UPDATES_DATE	= "date";
+		private boolean				connectionFailed;
 
 		@Override
-		protected UpdatesInfoFromJSON doInBackground(String... url) {
+		protected UpdatesInfoFromJSON doInBackground(String... url)
+		{
 			connectionFailed = false;
-			DefaultHttpClient   httpclient = new DefaultHttpClient(new BasicHttpParams());
-	    	HttpPost httppost = new HttpPost(url[0]);
-	    	// Depends on your web service
-	    	httppost.setHeader("Content-type", "application/json");
+			DefaultHttpClient httpclient = new DefaultHttpClient(
+					new BasicHttpParams());
+			HttpPost httppost = new HttpPost(url[0]);
+			// Depends on your web service
+			httppost.setHeader("Content-type", "application/json");
 
-	    	InputStream inputStream = null;
-	    	String jsonString = null;
-	    	try {
-	    	    HttpResponse response = httpclient.execute(httppost);           
-	    	    HttpEntity entity = response.getEntity();
+			InputStream inputStream = null;
+			String jsonString = null;
+			try
+			{
+				HttpResponse response = httpclient.execute(httppost);
+				HttpEntity entity = response.getEntity();
 
-	    	    inputStream = entity.getContent();
-	    	    // json is UTF-8 by default
-	    	    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
-	    	    StringBuilder sb = new StringBuilder();
+				inputStream = entity.getContent();
+				// json is UTF-8 by default
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "UTF-8"), 8);
+				StringBuilder sb = new StringBuilder();
 
-	    	    String line = null;
+				String line = null;
 
-	    	    // Read each line of the JSON and build it into a String.
-	    	    while ((line = reader.readLine()) != null)
-	    	    {
-	    	        sb.append(line + "\n");
-	    	    }
-	    	    jsonString = sb.toString();
-	    	    
-	    	    // Convert the result String to a JSONObject.
+				// Read each line of the JSON and build it into a String.
+				while ((line = reader.readLine()) != null)
+				{
+					sb.append(line + "\n");
+				}
+				jsonString = sb.toString();
+
+				// Convert the result String to a JSONObject.
 				JSONObject jObject = new JSONObject(jsonString);
-				
-				// Updates is an array that contains each individual update. 
+
+				// Updates is an array that contains each individual update.
 				// Set the "updates" tag to a JSONArray
-				
+
 				JSONArray updates = jObject.getJSONArray(TAG_UPDATES);
 				updatesInfo = new UpdatesInfoFromJSON();
 				updatesInfo.updatesText = new String[updates.length()];
 				updatesInfo.updatesDate = new String[updates.length()];
-				
-				for(int i=0; i < updates.length(); i++)
+
+				for (int i = 0; i < updates.length(); i++)
 				{
-					// For each update within the updates JSONArray, grab the text and the date.
+					// For each update within the updates JSONArray, grab the
+					// text and the date.
 					JSONObject a = updates.getJSONObject(i);
 					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
 					updatesInfo.updatesDate[i] = a.getString(TAG_UPDATES_DATE);
 
 				}
-	    	} catch (Exception e) { 
-	    		connectionFailed = true;
-	    	    e.printStackTrace();
-	    	}
-	    	finally {
-	    	    try{if(inputStream != null)inputStream.close();}catch(Exception squish){}
-	    	}
+			}
+			catch (Exception e)
+			{
+				connectionFailed = true;
+				e.printStackTrace();
+			}
+			finally
+			{
+				try
+				{
+					if (inputStream != null)
+						inputStream.close();
+				}
+				catch (Exception squish)
+				{
+				}
+			}
 			return updatesInfo;
-		
+
 		}
-		 @Override
-	     protected void onPostExecute(UpdatesInfoFromJSON updatesInfo) {
-	         super.onPostExecute(updatesInfo);
-			 // This executes after the doInBackground() method is finished.
-			 // It will set all of the update text and dates to an item in the ListView.
-	         
-			 listViewUpdates = ( ListView ) rootView.findViewById( R.id.updatesFeed_List);
-			
-	         // Make sure that we were able to connect to the server.
-	         if(!connectionFailed)
-	         {
-		         // For every update...
-		         for(int i=0; i < updatesInfo.updatesText.length; i++)
-		         {
-		        	 // Add the text and date to the ListView.
-		        	legendList.add(new Updates(updatesInfo.updatesText[i],updatesInfo.updatesDate[i]));
-		         }
-	         }
-	         else
-		        	legendList.add(new Updates("Unable to connect to the server!","Please check your internet connection."));
-	        
-	         listViewUpdates.setAdapter(updatesListAdapter);
-//	         listViewUpdates.setOnItemClickListener(new OnItemClickListener() {
-//	         @Override
-//	         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//	        	 Updates o = (Updates) parent.getItemAtPosition(position); 
-//	             Toast.makeText(getActivity(), o.getText().toString(), Toast.LENGTH_SHORT).show();
-//	         }
-//	         });    
-	         
-		 }
-			
+
+		@Override
+		protected void onPostExecute(UpdatesInfoFromJSON updatesInfo)
+		{
+			super.onPostExecute(updatesInfo);
+			// This executes after the doInBackground() method is finished.
+			// It will set all of the update text and dates to an item in the
+			// ListView.
+
+			listViewUpdates = (ListView) rootView
+					.findViewById(R.id.updatesFeed_List);
+
+			// Make sure that we were able to connect to the server.
+			if (!connectionFailed)
+			{
+				// For every update...
+				for (int i = 0; i < updatesInfo.updatesText.length; i++)
+				{
+					// Add the text and date to the ListView.
+					legendList.add(new Updates(updatesInfo.updatesText[i],
+							updatesInfo.updatesDate[i]));
+				}
+			}
+			else
+				legendList.add(new Updates("Unable to connect to the server!",
+						"Please check your internet connection."));
+
+			listViewUpdates.setAdapter(updatesListAdapter);
+			// listViewUpdates.setOnItemClickListener(new OnItemClickListener()
+			// {
+			// @Override
+			// public void onItemClick(AdapterView<?> parent, View view, int
+			// position, long id) {
+			// Updates o = (Updates) parent.getItemAtPosition(position);
+			// Toast.makeText(getActivity(), o.getText().toString(),
+			// Toast.LENGTH_SHORT).show();
+			// }
+			// });
+
+		}
+
 	}
-	
+
 	/**
-	 * This class was created so that we could pass both the update text and update date 
-	 * as an array to the onPostExecute() method of the AsyncTask.
+	 * This class was created so that we could pass both the update text and
+	 * update date as an array to the onPostExecute() method of the AsyncTask.
 	 * 
 	 * @author MJ Havens <me@mjhavens.com>
 	 *
 	 */
-	private class UpdatesInfoFromJSON{
-		String updatesText[];
-		String updatesDate[];
+	private class UpdatesInfoFromJSON
+	{
+		String	updatesText[];
+		String	updatesDate[];
 	}
-	
+
 	@Override
 	public void onPause()
 	{
 		super.onPause();
-		//Cancel the timer if the activity is shut down or the user switches to a different fragment.
-		// We don't want to be refreshing the updates list if the user is not on that fragment.
-		if(jsonRefreshTimer != null)
-			jsonRefreshTimer.cancel();
+		// Cancel the timer if the activity is shut down or the user switches to
+		// a different fragment.
+		// We don't want to be refreshing the updates list if the user is not on
+		// that fragment.
 		Log.d("APP", "onPause");
 	}
-	
+
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-    	// Get the JSON updates in the background and set each updates to a ListItem.
-    	//jsonUpdates.execute(url);
-    	Log.d("APP", "onResume");
-    	jsonRefreshTimer = new Timer();
-    	jsonRefreshTimer.scheduleAtFixedRate(new TimerTask(){
-    		@Override
-    		public void run(){
-    			Log.d("APP", "Refreshing the adapter");
-    	        legendList = new ArrayList<Updates>();
-    	    	updatesListAdapter = new UpdatesListAdapter(getActivity(), R.layout.updates_listview, legendList);
-    			new JSONUpdates().execute(url);
-    			updatesListAdapter.notifyDataSetChanged();
-    		}
-    	}, 0, 1000 * 15);
+
+		// Get the JSON updates in the background and set each update to a
+		// ListItem.
+		getUpdates();
 	}
-    
+
+	private void getUpdates()
+	{
+		swipeLayout.setRefreshing(true);
+		Log.d("APP", "Refreshing the adapter");
+		legendList = new ArrayList<Updates>();
+		updatesListAdapter = new UpdatesListAdapter(getActivity(),
+				R.layout.updates_listview, legendList);
+		new JSONUpdates().execute(url);
+		updatesListAdapter.notifyDataSetChanged();
+		swipeLayout.setRefreshing(false);
+	}
+
+	@Override
+	public void onRefresh()
+	{
+		getUpdates();
+		Log.d("APP", "Refreshed");
+	}
+
 }

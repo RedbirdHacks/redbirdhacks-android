@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/default_padding" >
+
+    <LinearLayout
+        android:id="@+id/rlEventHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvEventTime"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:textColor="@color/scheduleEventTimeColor"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
+            android:text="8:00-9:00 " />
+        <TextView
+            android:id="@+id/tvEventTitle"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
+            android:text="Registration" />
+
+    </LinearLayout>
+
+  
+
+</RelativeLayout>
