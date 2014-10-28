@@ -1,8 +1,8 @@
 
 /**
- * This POJO class stores the attributes for a single announcement/update.
+ * This POJO class stores the attributes for a single update.
  * 
- * @author MJ Havens
+ * @author MJ Havens <me@mjhavens.com>
  *
  */
 package org.redbird.hacks;
