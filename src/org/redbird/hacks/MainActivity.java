@@ -18,6 +18,9 @@ public class MainActivity extends FragmentActivity
 {
 	private FragmentTabHost	topTabs;
 
+	/**
+	 * Adds the tabs to the very top of the app and sets the updatesFragment as the initial screen.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
