@@ -37,8 +37,6 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 	{
 		super(ctx, resourceId, objects);
 		resource = resourceId; //
-		inflater = LayoutInflater.from(ctx);
-		context = ctx;
 	}
 
 	/**
@@ -71,7 +69,7 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 		// context.getPackageName());
 		// Drawable image = context.getResources().getDrawable(imageResource);
 		// updateImage.setImageDrawable(image);
-		((ArrayAdapter) UpdatesListAdapter.this).notifyDataSetChanged();
+		((ArrayAdapter<?>) UpdatesListAdapter.this).notifyDataSetChanged();
 
 		return convertView;
 	}
