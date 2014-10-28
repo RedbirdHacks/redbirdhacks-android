@@ -6,6 +6,12 @@
 
 package org.redbird.hacks;
 
+/**
+ * The adapter class that was made to return each list item as a view.
+ * 
+ * @author - MJ Havens <me@mjhavens.com>
+ */
+
 import java.util.List;
 
 import android.content.Context;
@@ -35,6 +41,10 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 		context = ctx;
 	}
 
+	/**
+	 * Sets the update text and update description for an update. 
+	 * It then returns a single view for each item in the list.
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
