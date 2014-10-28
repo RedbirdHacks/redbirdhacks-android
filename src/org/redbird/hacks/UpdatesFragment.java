@@ -78,7 +78,8 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 			DefaultHttpClient httpclient = new DefaultHttpClient(
 					new BasicHttpParams());
 			HttpPost httppost = new HttpPost(url[0]);
-			// Depends on your web service
+			
+			// This content type depends on the web server.
 			httppost.setHeader("Content-type", "application/json");
 
 			InputStream inputStream = null;
@@ -89,7 +90,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 				HttpEntity entity = response.getEntity();
 
 				inputStream = entity.getContent();
-				// json is UTF-8 by default
+				// JSON is UTF-8 by default
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(inputStream, "UTF-8"), 8);
 				StringBuilder sb = new StringBuilder();
@@ -114,10 +115,10 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 				updatesInfo.updatesText = new String[updates.length()];
 				updatesInfo.updatesDate = new String[updates.length()];
 
+				// For each update within the updates JSONArray, grab the
+				// text and the date.
 				for (int i = 0; i < updates.length(); i++)
 				{
-					// For each update within the updates JSONArray, grab the
-					// text and the date.
 					JSONObject a = updates.getJSONObject(i);
 					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
 					updatesInfo.updatesDate[i] = a.getString(TAG_UPDATES_DATE);
@@ -126,6 +127,8 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 			}
 			catch (Exception e)
 			{
+				// The connection to the server failed. Throw a flag so that we can
+				// catch it in onPostExecute().
 				connectionFailed = true;
 				e.printStackTrace();
 			}
