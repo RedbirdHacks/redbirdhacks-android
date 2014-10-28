@@ -42,8 +42,8 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 	private View				rootView;
 	private UpdatesListAdapter	updatesListAdapter;
 	private SwipeRefreshLayout	swipeLayout;
-	private final int			timeToRefresh	= 15000;
 
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
