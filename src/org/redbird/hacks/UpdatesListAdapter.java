@@ -24,9 +24,7 @@ import android.widget.TextView;
 public class UpdatesListAdapter extends ArrayAdapter<Updates>
 {
 	private int				resource;
-	private LayoutInflater	inflater;
-	private Context			context;
-
+	
 	/**
 	 * Constructor for the class.
 	 * 
@@ -36,7 +34,7 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 	public UpdatesListAdapter(Context ctx, int resourceId, List<Updates> objects)
 	{
 		super(ctx, resourceId, objects);
-		resource = resourceId; //
+		resource = resourceId;
 	}
 
 	/**
