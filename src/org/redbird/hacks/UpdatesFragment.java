@@ -152,7 +152,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 		{
 			super.onPostExecute(updatesInfo);
 			// This executes after the doInBackground() method is finished.
-			// It will set all of the update text and dates to an item in the
+			// It will set all of the update text and dates to a view in the
 			// ListView.
 
 			listViewUpdates = (ListView) rootView
@@ -206,13 +206,12 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 	public void onPause()
 	{
 		super.onPause();
-		// Cancel the timer if the activity is shut down or the user switches to
-		// a different fragment.
-		// We don't want to be refreshing the updates list if the user is not on
-		// that fragment.
-		Log.d("APP", "onPause");
 	}
 
+	/**
+	 * Gets called right before the fragment becomes active.
+	 * This is how the list view initially gets the updates.
+	 */
 	@Override
 	public void onResume()
 	{
@@ -223,6 +222,9 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 		getUpdates();
 	}
 
+	/**
+	 * This method will refresh the list view with the latest updates.
+	 */
 	private void getUpdates()
 	{
 		swipeLayout.setRefreshing(true);
@@ -235,6 +237,9 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 		swipeLayout.setRefreshing(false);
 	}
 
+	/**
+	 * A listener that is called when a user swipes down on the screen.
+	 */
 	@Override
 	public void onRefresh()
 	{
