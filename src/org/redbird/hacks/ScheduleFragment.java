@@ -34,7 +34,10 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		eventsList.addAll(buildStubbedScheduleEvent());
+		if(eventsList.isEmpty()){
+			eventsList.addAll(buildStubbedScheduleEvent());
+		}
+		
 		Collections.sort(eventsList);
 
 		ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), R.layout.schedule_list_item, eventsList );
