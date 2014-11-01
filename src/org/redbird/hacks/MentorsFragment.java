@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class MentorsFragment extends ListFragment {
@@ -22,8 +21,6 @@ public class MentorsFragment extends ListFragment {
 	private View fragmentView;
 	
 	private List<Mentor> mentorList = new ArrayList<Mentor>();
-	
-//	private ListView listView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +77,6 @@ public class MentorsFragment extends ListFragment {
 
                 holder = new MentorHolder();
                 holder.tvMentorName = (TextView) view.findViewById(R.id.tvMentorName);
-//                holder.geoPointTextView = (TextView) view.findViewById(R.id.geo_point);
 
                 view.setTag(holder);
             } else {
@@ -96,17 +92,15 @@ public class MentorsFragment extends ListFragment {
 		
 		
 	}
+	
 	static class MentorHolder{
 		public TextView tvMentorName;
 		public ImageView imageViewMentorContactMethodIcon;
 	}
 	
-	class MentorSectionizer implements Sectionizer<Mentor>{
-//		private Mentor currentMentor;
+	private class MentorSectionizer implements Sectionizer<Mentor>{
 		
-		public MentorSectionizer(){
-//			this.currentMentor = currentMentor;
-		}
+		public MentorSectionizer(){}
 
 		@Override
 		public String getSectionTitleForItem(Mentor instance) {
