@@ -15,14 +15,14 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="4"
             android:padding="8sp"
-            android:text="Andrew Erickson" />
+            android:text="Andrew Erickson"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/imageViewMentorContactMethodIcon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_launcher" />
+            android:layout_weight="1" />
     </LinearLayout>
 
 </LinearLayout>

@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity
 			topTabs.addTab(topTabs.newTabSpec("Updates")
 					.setIndicator("Updates"), UpdatesFragment.class, null);
 			topTabs.addTab(topTabs.newTabSpec("Mentors")
-					.setIndicator("Mentors"), UpdatesFragment.class, null);
+					.setIndicator("Mentors"), MentorsFragment.class, null);
 			topTabs.addTab(
 					topTabs.newTabSpec("Schedule").setIndicator("Schedule"),
 					ScheduleFragment.class, null);

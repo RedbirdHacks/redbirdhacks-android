@@ -9,6 +9,12 @@ public class Mentor implements Serializable, Comparable<Mentor> {
 	private String expertise;
 	private ContactMethod preferredContactMethod;
 	
+	public Mentor(String name, String expertise, ContactMethod preferredContactMethod) {
+		super();
+		this.name = name;
+		this.expertise = expertise;
+		this.preferredContactMethod = preferredContactMethod;
+	}
 	public String getName() {
 		return name;
 	}
