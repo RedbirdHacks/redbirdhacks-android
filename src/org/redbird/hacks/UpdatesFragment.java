@@ -59,6 +59,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 		swipeLayout.setColorSchemeResources(R.color.redBirdHacksRed,
 				R.color.orange, R.color.darkred,
 				R.color.white);
+		
 		return rootView;
 	}
 
@@ -220,6 +221,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 		// Get the JSON updates in the background and set each update to a
 		// ListItem.
 		getUpdates();
+		
 	}
 
 	/**
@@ -243,8 +245,8 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 	@Override
 	public void onRefresh()
 	{
-		getUpdates();
 		Log.d("APP", "Refreshed");
+		getUpdates(); 
 	}
 
 }

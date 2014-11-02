@@ -4,7 +4,7 @@
  * This is the MainActivity that begins by loading a fragment (UpdatesFragment.class) from the activity_main layout.
  * It will then generate the Updates, Mentors, and Schedule tabs at the top of the app and apply a custom tab format.
  * 
- * @author MJ Havens <me@mjhavens.com>
+ * @author MJ Havens <me@mjhavens.com>, Andrew Erickson
  */
 
 package org.redbird.hacks;
