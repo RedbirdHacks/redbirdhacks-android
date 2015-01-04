@@ -1,12 +1,11 @@
+package org.redbird.hacks;
 
 /**
  * This POJO class stores the attributes for a single update.
  * 
- * @author MJ Havens <me@mjhavens.com>
+ * @author MJ Havens <me@mjhavens.com> on 10/18/2014
  *
  */
-package org.redbird.hacks;
-
 public class Updates
 {
 	private String	date;

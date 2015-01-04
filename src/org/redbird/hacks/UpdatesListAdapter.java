@@ -1,16 +1,4 @@
-/**
- * This class is used to set the Updates attributes to an item in the ListView.
- * 
- * @author MJ Havens <me@mjhavens.com>
- */
-
 package org.redbird.hacks;
-
-/**
- * The adapter class that was made to return each list item as a view.
- * 
- * @author - MJ Havens <me@mjhavens.com>
- */
 
 import java.util.List;
 
@@ -23,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+/**
+ * This class is used to set the Updates attributes to an item in the ListView
+ * 
+ * @author - MJ Havens <me@mjhavens.com> on 10/18/2014
+ */
 public class UpdatesListAdapter extends ArrayAdapter<Updates>
 {
 	private int		resource;
@@ -63,8 +56,8 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 		StringBuilder formattedHashtagText = new StringBuilder(updateText);
 		int paddingSize = 0; // The character count for the number of html tags
 								// that have been added
-		final int htmlTagSize = 3; // The character count of a single html tag.
-		final int totalHtmlTagSize = (htmlTagSize * 2) + 1; // The character
+		final int htmlTagSize = 22; // The character count of a single html tag.
+		final int totalHtmlTagSize = 29; // The character
 															// count of both the
 															// starting and
 															// ending html tags
@@ -77,11 +70,10 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 			{
 				// We want to make the hashtag word bold
 				// Add the html bold tag before the start of the hashtag.
-				formattedHashtagText.insert(i + paddingSize, "<b>");
+				formattedHashtagText.insert(i + paddingSize, "<font color=\"#E81A08\">");
 
-				// Make a substring from the start of the hastag, to the end of
-				// the sentence. This way, we can find where the end of the
-				// hashtag word is.
+				// Make a substring from the start of the hastag to the end of
+				// the sentence.
 				String hashtagAndOn = updateText.substring(i,
 						updateText.length());
 
@@ -106,7 +98,7 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 					// another starting html tag.
 					hashtagEnding += i + paddingSize + htmlTagSize;
 				}
-				formattedHashtagText.insert(hashtagEnding, "</b>");
+				formattedHashtagText.insert(hashtagEnding, "</font>");
 				Log.d("APP", formattedHashtagText.toString());
 
 				// Add onto the padding size in case there is another hashtag in the sentence.

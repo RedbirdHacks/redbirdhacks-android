@@ -11,10 +11,13 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="20dp"
 	    android:layout_marginStart="20dp"
+	    android:layout_marginRight="15dp" 
+	    android:layout_marginEnd="15dp"
+	    android:layout_marginTop="5dp"
 	    android:singleLine="false"
 	    android:scrollHorizontally="false"
-	    android:textColor="@color/redBirdHacksRed"
-	    android:textSize="17sp" />
+	    android:textColor="@color/black"
+	    android:textSize="17sp"/>
 	
 	<TextView
 	    android:id="@+id/updateDesc"
@@ -26,6 +29,7 @@
 	    android:layout_alignParentEnd="true"
 	    android:layout_marginRight="15dp" 
 	    android:layout_marginEnd="15dp"
+	    android:layout_marginTop="10dp"
 	    android:textStyle="italic"/>	
 	    
 <!-- 	<ImageView

@@ -5,6 +5,8 @@
  * It will then generate the Updates, Mentors, and Schedule tabs at the top of the app and apply a custom tab format.
  * 
  * @author MJ Havens <me@mjhavens.com>, Andrew Erickson
+ * Initial creation date: 10/4/2014
+ * 
  */
 
 package org.redbird.hacks;

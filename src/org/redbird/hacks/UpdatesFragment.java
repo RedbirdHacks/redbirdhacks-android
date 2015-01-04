@@ -1,12 +1,3 @@
-/**
- * This fragment gets called when the app is initialized.
- * 
- * It references the custom ListView inside updates_fragment_layout.xml and adds items to the list.
- * The list is dynamically populated by parsing JSON Objects from the RedBirdHacks website.
- * 
- * @author MJ Havens <me@mjhavens.com>
- */
-
 package org.redbird.hacks;
 
 import java.io.BufferedReader;
@@ -34,6 +25,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+/**
+ * This fragment gets called when the app is initialized.
+ * 
+ * It references the custom ListView inside updates_fragment_layout.xml and adds items to the list.
+ * The list is dynamically populated by parsing JSON Objects from the RedBirdHacks website.
+ * 
+ * @author MJ Havens <me@mjhavens.com> on 10/18/2014
+ */
 public class UpdatesFragment extends Fragment implements OnRefreshListener
 {
 	private final String		url				= "http://mjhavens.com/announcements.json";
@@ -48,8 +47,6 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
 	{
-
-		// Inflate the layout for this fragment
 		rootView = inflater.inflate(R.layout.updates_fragment_layout,
 				container, false);
 
@@ -80,7 +77,6 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 					new BasicHttpParams());
 			HttpPost httppost = new HttpPost(url[0]);
 			
-			// This content type depends on the web server.
 			httppost.setHeader("Content-type", "application/json");
 
 			InputStream inputStream = null;
@@ -91,7 +87,6 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 				HttpEntity entity = response.getEntity();
 
 				inputStream = entity.getContent();
-				// JSON is UTF-8 by default
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(inputStream, "UTF-8"), 8);
 				StringBuilder sb = new StringBuilder();
@@ -177,7 +172,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 			listViewUpdates.setAdapter(updatesListAdapter);
 			// listViewUpdates.setOnItemClickListener(new OnItemClickListener()
 			// {
-			// @Override
+			// @Override2
 			// public void onItemClick(AdapterView<?> parent, View view, int
 			// position, long id) {
 			// Updates o = (Updates) parent.getItemAtPosition(position);
