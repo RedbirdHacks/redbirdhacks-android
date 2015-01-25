@@ -1,3 +1,12 @@
+/**
+*  UpdatesListAdapter.java
+*  RedbirdHacks
+*
+* This class is used to set the Updates attributes to an item in the ListVie
+* 
+*  Created by MJ Havens on 10/18/14.
+**/
+
 package org.redbird.hacks;
 
 import java.util.List;
@@ -11,11 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-/**
- * This class is used to set the Updates attributes to an item in the ListView
- * 
- * @author - MJ Havens <me@mjhavens.com> on 10/18/2014
- */
 public class UpdatesListAdapter extends ArrayAdapter<Updates>
 {
 	private int		resource;

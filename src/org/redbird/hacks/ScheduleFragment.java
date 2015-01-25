@@ -1,3 +1,9 @@
+/**
+*  ScheduleFragment.java
+*  RedbirdHacks
+*
+*  Created by Andrew Erickson on 11/1/14.
+**/
 package org.redbird.hacks;
 
 import java.io.BufferedReader;

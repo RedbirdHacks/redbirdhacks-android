@@ -1,3 +1,10 @@
+/**
+*  ScheduleAdapter.java
+*  RedbirdHacks
+*
+*  Created by Andrew Erickson.
+*  Copyright (c) 2014 Andrew Erickson. All rights reserved.
+**/
 package org.redbird.hacks;
 
 import java.util.List;

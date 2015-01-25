@@ -1,22 +1,19 @@
+/**
+*  Updates.java
+*  RedbirdHacks
+*  
+* This POJO class stores the attributes for a single update.
+*
+* Created by MJ Havens on 10/18/14.
+**/
 package org.redbird.hacks;
 
-/**
- * This POJO class stores the attributes for a single update.
- * 
- * @author MJ Havens <me@mjhavens.com> on 10/18/2014
- *
- */
+
 public class Updates
 {
 	private String	date;
 	private String	text;
 
-	/**
-	 * Basic constructor.
-	 * 
-	 * @param title - The title of the announcement item.
-	 * @param description - the description of the announcement item.
-	 */
 	public Updates(String text, String date)
 	{
 		super();

@@ -1,3 +1,9 @@
+/**
+*  ScheduleEvent.java
+*  RedbirdHacks
+*
+*  Created by Andrew Erickson on 11/1/14.
+**/
 package org.redbird.hacks;
 
 public class ScheduleEvent implements Comparable<ScheduleEvent>{

@@ -1,10 +1,12 @@
 /**
  * The official RedBirdHacks Android application. 
  * 
- * This is the MainActivity that begins by loading a fragment (UpdatesFragment.class) from the activity_main layout.
- * It will then generate the Updates, Mentors, and Schedule tabs at the top of the app and apply a custom tab format.
+ * This is the MainActivity that begins by loading custom tabs at the top,
+ * and then the Updates fragment is loaded.
  * 
- * @author MJ Havens <me@mjhavens.com>, Andrew Erickson
+ * @author MJ Havens <me@mjhavens.com> 
+ * @author Andrew Erickson
+ * 
  * Initial creation date: 10/4/2014
  * 
  */

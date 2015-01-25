@@ -1,3 +1,14 @@
+/**
+*  UpdatesFragment.java
+*  RedbirdHacks
+*
+* * This fragment gets called when the app is initialized.
+ * 
+ * It references the custom ListView inside updates_fragment_layout.xml and adds items to the list.
+ * The list is dynamically populated by parsing JSON Objects from the RedBirdHacks website.
+ * 
+*  Created by MJ Havens on 10/18/14.
+**/
 package org.redbird.hacks;
 
 import java.io.BufferedReader;
@@ -25,14 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-/**
- * This fragment gets called when the app is initialized.
- * 
- * It references the custom ListView inside updates_fragment_layout.xml and adds items to the list.
- * The list is dynamically populated by parsing JSON Objects from the RedBirdHacks website.
- * 
- * @author MJ Havens <me@mjhavens.com> on 10/18/2014
- */
 public class UpdatesFragment extends Fragment implements OnRefreshListener
 {
 	private final String		url				= "http://redbirdhacks.org/json/announcements.json";

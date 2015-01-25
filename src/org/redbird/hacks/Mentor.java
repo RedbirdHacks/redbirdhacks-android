@@ -1,3 +1,9 @@
+/**
+*  Mentor.java
+*  RedbirdHacks
+*
+*  Created by Andrew Erickson and MJ Havens in 2014.
+**/
 package org.redbird.hacks;
 
 import java.io.Serializable;
