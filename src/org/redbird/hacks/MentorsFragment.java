@@ -146,7 +146,7 @@ public class MentorsFragment extends ListFragment
 		protected List<Mentor> doInBackground(Void... params)
 		{
 			List<Mentor> mentors = new ArrayList<Mentor>();
-			final String url = "http://mjhavens.com/mentors.json";
+			final String url = "http://redbirdhacks.org/json/mentors.json";
 			connectionFailed = false;
 			DefaultHttpClient httpclient = new DefaultHttpClient(
 					new BasicHttpParams());

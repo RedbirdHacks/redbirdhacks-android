@@ -107,7 +107,7 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 		protected List<ScheduleEvent> doInBackground(Void... params)
 		{
 			List<ScheduleEvent> events = new ArrayList<ScheduleEvent>();
-			final String url = "http://mjhavens.com/events.json";
+			final String url = "http://redbirdhacks.org/json/events.json";
 			connectionFailed = false;
 			DefaultHttpClient httpclient = new DefaultHttpClient(
 					new BasicHttpParams());
