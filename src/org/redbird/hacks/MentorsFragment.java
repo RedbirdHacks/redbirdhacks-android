@@ -121,14 +121,37 @@ public class MentorsFragment extends ListFragment {
 
 			Mentor mentor = mentors.get(position);
 			holder.tvMentorName.setText(mentor.getName());
-			// TODO -- What's the preferred contact method?
-			List<ContactMethod> x = (List<ContactMethod>) mentor.getContactMethodsList();
+			//TODO 1) Uncomment once the json file is updated with
+			//one contact method for mentors and "http:/" in front 
+			//of all URL's
+			//TODO 2) Change the drawables once we have the icons
+			//TODO 3) Remove getContactMethodList() from Mentor TO and
+			//replace with getContactMethod()
+			
+//			ImageView mentorContactImage = holder.imageViewMentorContactMethodIcon;
+//			ContactMethod mentorContactMethod = mentor.getContactMethod();
+//			if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.TWITTER)){
+//				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
+//			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.FACEBOOK)){
+//				mentorContactImage.setBackgroundResource(R.drawable.genres_icon);
+//			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
+//				mentorContactImage.setBackgroundResource(R.drawable.rss_feed);
+//			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.LINKED_IN)){
+//				mentorContactImage.setBackgroundResource(R.drawable.tab_active);
+//			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
+//				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
+//			}
+			
 			
 			//Twitter: ic_launcher
 			//Facebook: genres_icon
 			//Email: rss_feed
 			//LinkedIn: tab_active
 			//Phone: ic_launcher
+			
+			//PLACEHOLDER CODE
+			List<ContactMethod> x = (List<ContactMethod>) mentor.getContactMethodsList();
+			
 			if(x != null){
 				//since we're not sure how to get a preferred
 				//contact, just getting the first one off the list
