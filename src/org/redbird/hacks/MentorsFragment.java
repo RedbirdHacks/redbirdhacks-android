@@ -121,64 +121,55 @@ public class MentorsFragment extends ListFragment {
 
 			Mentor mentor = mentors.get(position);
 			holder.tvMentorName.setText(mentor.getName());
-			//TODO 1) Uncomment once the json file is updated with
+			//DONE 1) Uncomment once the json file is updated with
 			//one contact method for mentors and "http:/" in front 
 			//of all URL's
 			//TODO 2) Change the drawables once we have the icons
 			//TODO 3) Remove getContactMethodList() from Mentor TO and
 			//replace with getContactMethod()
 			
-//			ImageView mentorContactImage = holder.imageViewMentorContactMethodIcon;
-//			ContactMethod mentorContactMethod = mentor.getContactMethod();
-//			if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.TWITTER)){
-//				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
-//			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.FACEBOOK)){
-//				mentorContactImage.setBackgroundResource(R.drawable.genres_icon);
-//			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
-//				mentorContactImage.setBackgroundResource(R.drawable.rss_feed);
-//			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.LINKED_IN)){
-//				mentorContactImage.setBackgroundResource(R.drawable.tab_active);
-//			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
-//				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
-//			}
-			
-			
 			//Twitter: ic_launcher
 			//Facebook: genres_icon
 			//Email: rss_feed
 			//LinkedIn: tab_active
 			//Phone: ic_launcher
-			
-			//PLACEHOLDER CODE
-			List<ContactMethod> x = (List<ContactMethod>) mentor.getContactMethodsList();
-			
-			if(x != null){
-				//since we're not sure how to get a preferred
-				//contact, just getting the first one off the list
-				final ContactMethod m = x.get(0);
-				if(m.getContactMethodType().equals(ContactMethodType.TWITTER)){
-					holder.imageViewMentorContactMethodIcon.setBackgroundResource(R.drawable.ic_launcher);
-				} else if(m.getContactMethodType().equals(ContactMethodType.FACEBOOK)){
-					holder.imageViewMentorContactMethodIcon.setBackgroundResource(R.drawable.genres_icon);
-				} else if(m.getContactMethodType().equals(ContactMethodType.EMAIL)){
-					holder.imageViewMentorContactMethodIcon.setBackgroundResource(R.drawable.rss_feed);
-				} else if(m.getContactMethodType().equals(ContactMethodType.LINKED_IN)){
-					holder.imageViewMentorContactMethodIcon.setBackgroundResource(R.drawable.tab_active);
-				} else if(m.getContactMethodType().equals(ContactMethodType.PHONE)){
-					holder.imageViewMentorContactMethodIcon.setBackgroundResource(R.drawable.ic_launcher);
-				}
-				
+			ImageView mentorContactImage = holder.imageViewMentorContactMethodIcon;
+			final ContactMethod mentorContactMethod = mentor.getContactMethod();
+			if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.TWITTER)){
+				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
+			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.FACEBOOK)){
+				mentorContactImage.setBackgroundResource(R.drawable.genres_icon);
+			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
+				mentorContactImage.setBackgroundResource(R.drawable.rss_feed);
+			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.LINKED_IN)){
+				mentorContactImage.setBackgroundResource(R.drawable.tab_active);
+			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
+				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
+			}
+							
 				holder.imageViewMentorContactMethodIcon.setOnClickListener(new OnClickListener() {
 					
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
-						Uri uri = Uri.parse(m.getContactActionURL());
-						Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-						startActivity(intent);						
+						Intent intent = null;
+						if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
+							Uri uri = Uri.parse("tel:" + mentorContactMethod.getContactActionURL());
+							intent = new Intent(Intent.ACTION_DIAL, uri);
+						} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
+							Uri uri = Uri.parse("mailto:" + mentorContactMethod.getContactActionURL());
+							intent = new Intent(Intent.ACTION_VIEW, uri);
+						} else {
+							Uri uri = Uri.parse(mentorContactMethod.getContactActionURL());
+							intent = new Intent(Intent.ACTION_VIEW, uri);
+						}
+						
+						if(intent != null)
+							startActivity(intent);
+											
 					}
 				});
-			}
+//			}
 			return view;
 		}
 
@@ -238,40 +229,42 @@ public class MentorsFragment extends ListFragment {
 					String specialty = a.getString(TAG_SPECIALTY);
 					String description = a.getString(TAG_DESCRIPTION);
 
-					List<ContactMethod> contactMethodsList = new ArrayList<ContactMethod>();
+					//List<ContactMethod> contactMethodsList = new ArrayList<ContactMethod>();
 					JSONArray contactMethodsArray = a.getJSONArray(TAG_CONTACT);
 
 					JSONObject b = contactMethodsArray.getJSONObject(0);
+					
+					ContactMethod contactMethod = null;
 
 					if (!b.getString("twitter").equals("")) {
-						ContactMethod c = new ContactMethod(
+						contactMethod = new ContactMethod(
 								ContactMethodType.TWITTER,
 								b.getString(TAG_TWITTER));
-						contactMethodsList.add(c);
+						//contactMethodsList.add(contactMethod);
 					}
 					if (!b.getString("facebook").equals("")) {
-						ContactMethod c = new ContactMethod(
+						contactMethod = new ContactMethod(
 								ContactMethodType.FACEBOOK,
 								b.getString(TAG_FACEBOOK));
-						contactMethodsList.add(c);
+						//contactMethodsList.add(contactMethod);
 					}
 					if (!b.getString("email").equals("")) {
-						ContactMethod c = new ContactMethod(
+						contactMethod = new ContactMethod(
 								ContactMethodType.EMAIL, b.getString(TAG_EMAIL));
-						contactMethodsList.add(c);
+						//contactMethodsList.add(contactMethod);
 					}
 					if (!b.getString("linkedin").equals("")) {
-						ContactMethod c = new ContactMethod(
+						contactMethod = new ContactMethod(
 								ContactMethodType.LINKED_IN,
 								b.getString(TAG_LINKEDIN));
-						contactMethodsList.add(c);
+						//contactMethodsList.add(contactMethod);
 					}
 					if (!b.getString("phone").equals("")) {
-						ContactMethod c = new ContactMethod(
+						contactMethod = new ContactMethod(
 								ContactMethodType.PHONE, b.getString(TAG_PHONE));
-						contactMethodsList.add(c);
+						//contactMethodsList.add(contactMethod);
 					}
-					Mentor m = new Mentor(name, specialty, contactMethodsList,
+					Mentor m = new Mentor(name, specialty, contactMethod,
 							description);
 					mentors.add(m);
 				}
