@@ -1,5 +1,5 @@
 /**
- * The official RedBirdHacks Android application. 
+ * The official RedbirdHacks Android application. 
  * 
  * This is the MainActivity that begins by loading custom tabs at the top,
  * and then the Updates fragment is loaded.
@@ -13,7 +13,13 @@
 
 package org.redbird.hacks;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
+
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -35,11 +41,13 @@ public class MainActivity extends FragmentActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Log.i("MainActivity", "onCreate");
 
+		//start the service from here //MyService is your service class name
+				startService(new Intent(this, NotificationService.class));
+				
 		// Initialize and setup the FragmentTabHost
 		topTabs = (FragmentTabHost) findViewById(android.R.id.tabhost);
 		topTabs.setup(this, getSupportFragmentManager(),

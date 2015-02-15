@@ -22,11 +22,11 @@ public class Mentor implements Serializable, Comparable<Mentor> {
 	private ContactMethod contactMethod;
 
 	public Mentor(String name, String specialty,
-			List<ContactMethod> contactMethodsList, String description) {
+			ContactMethod contactMethod, String description) {
 		super();
 		this.name = name;
 		this.specialty = specialty;
-		this.contactMethodsList = contactMethodsList;
+		this.contactMethod = contactMethod;
 		this.description = description;
 
 		// This is how you retrieve all of the contact methods for a mentor.
@@ -51,20 +51,12 @@ public class Mentor implements Serializable, Comparable<Mentor> {
 		return specialty;
 	}
 
-	public List getContactMethodsList() {
-		return contactMethodsList;
-	}
-
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public void setContactMethodsList(List contactMethodsList) {
-		this.contactMethodsList = contactMethodsList;
 	}
 
 	public ContactMethod getContactMethod() {
