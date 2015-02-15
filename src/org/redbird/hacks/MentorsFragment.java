@@ -146,31 +146,31 @@ public class MentorsFragment extends ListFragment {
 			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
 				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
 			}
-				
-			holder.imageViewMentorContactMethodIcon.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent intent = null;
-					if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
-						Uri uri = Uri.parse("tel:" + mentorContactMethod.getContactActionURL());
-						intent = new Intent(Intent.ACTION_DIAL, uri);
-					} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
-						Uri uri = Uri.parse("mailto:" + mentorContactMethod.getContactActionURL());
-						intent = new Intent(Intent.ACTION_VIEW, uri);
-					} else {
-						Uri uri = Uri.parse(mentorContactMethod.getContactActionURL());
-						intent = new Intent(Intent.ACTION_VIEW, uri);
-					}
+							
+				holder.imageViewMentorContactMethodIcon.setOnClickListener(new OnClickListener() {
 					
-					if(intent != null)
-						startActivity(intent);
-										
-				}
-			});
-//		}
-		return view;
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent intent = null;
+						if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
+							Uri uri = Uri.parse("tel:" + mentorContactMethod.getContactActionURL());
+							intent = new Intent(Intent.ACTION_DIAL, uri);
+						} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
+							Uri uri = Uri.parse("mailto:" + mentorContactMethod.getContactActionURL());
+							intent = new Intent(Intent.ACTION_VIEW, uri);
+						} else {
+							Uri uri = Uri.parse(mentorContactMethod.getContactActionURL());
+							intent = new Intent(Intent.ACTION_VIEW, uri);
+						}
+						
+						if(intent != null)
+							startActivity(intent);
+											
+					}
+				});
+//			}
+			return view;
 		}
 
 	}
@@ -221,7 +221,6 @@ public class MentorsFragment extends ListFragment {
 				// Convert the result String to a JSONObject.
 				JSONObject jObject = new JSONObject(jsonString);
 				JSONArray mentorsArray = jObject.getJSONArray(TAG_MENTORS);
-		
 
 				// Grab the data for each mentor.
 				for (int i = 0; i < mentorsArray.length(); i++) {
