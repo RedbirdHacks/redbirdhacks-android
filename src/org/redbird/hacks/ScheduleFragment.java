@@ -88,7 +88,7 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 		super.onListItemClick(l, v, position, id);
 		
 		 ScheduleEvent o = (ScheduleEvent) l.getItemAtPosition(position); 
-         Toast.makeText(getActivity(), o.getEventTitle().toString(), Toast.LENGTH_SHORT).show();
+         Toast.makeText(getActivity(), o.getEventDescription().toString(), Toast.LENGTH_SHORT).show();
 	}
 	
 	private class ScheduleSectionizer implements Sectionizer<ScheduleEvent>{

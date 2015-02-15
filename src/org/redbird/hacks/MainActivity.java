@@ -45,8 +45,8 @@ public class MainActivity extends FragmentActivity
 		setContentView(R.layout.activity_main);
 		Log.i("MainActivity", "onCreate");
 
-		//start the service from here //MyService is your service class name
-				startService(new Intent(this, NotificationService.class));
+		//TODO: Notifications for new updates
+		//startService(new Intent(this, NotificationService.class));
 				
 		// Initialize and setup the FragmentTabHost
 		topTabs = (FragmentTabHost) findViewById(android.R.id.tabhost);
