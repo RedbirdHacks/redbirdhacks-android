@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">RedbirdHacks</string>
-    <string name="updates_fragment_string">Updates</string>   
+    <string name="updates_fragment_string">Updates</string>  
+    <string name="contactMentor">Contact method for a mentor</string> 
 
 </resources>

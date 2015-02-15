@@ -56,23 +56,22 @@ public class MainActivity extends FragmentActivity
 		// Add the three tabs to the top of the screen.
 		topTabs.addTab(
 				setIndicator(MainActivity.this, topTabs.newTabSpec("Updates"),
-						R.drawable.tab_custom_selector, "Updates",
-						R.drawable.rss_feed), UpdatesFragment.class, null);
+						R.drawable.tab_background_selector, "Updates",
+						R.drawable.updates_tab_icon_selector), UpdatesFragment.class, null);
 		topTabs.addTab(
 				setIndicator(MainActivity.this, topTabs.newTabSpec("Mentors"),
-						R.drawable.tab_custom_selector, "Mentors",
-						R.drawable.person), MentorsFragment.class, null);
+						R.drawable.tab_background_selector, "Mentors",
+						R.drawable.mentors_tab_icon_selector), MentorsFragment.class, null);
 		topTabs.addTab(
 				setIndicator(MainActivity.this, topTabs.newTabSpec("Schedule"),
-						R.drawable.tab_custom_selector, "Schedule",
-						R.drawable.calendar), ScheduleFragment.class, null);
+						R.drawable.tab_background_selector, "Schedule",
+						R.drawable.schedule_tab_icon_selector), ScheduleFragment.class, null);
 
 		// Use this to add a custom tab when the tab is pressed, not pressed,
 		// etc.
 		// TO DO: Make custom icons.
-		topTabs.getTabWidget().getChildAt(0).setBackgroundResource(R.drawable.tab_custom_selector);
-		topTabs.getTabWidget().getChildAt(1).setBackgroundResource(R.drawable.tab_custom_selector);
-		topTabs.getTabWidget().getChildAt(2).setBackgroundResource(R.drawable.tab_custom_selector);
+		topTabs.getTabWidget().setBackgroundResource(R.drawable.tab_background_selector);
+		topTabs.getTabWidget().setDividerDrawable(null);
 
 	}
 

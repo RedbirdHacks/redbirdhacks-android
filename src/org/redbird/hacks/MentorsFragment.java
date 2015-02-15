@@ -136,15 +136,15 @@ public class MentorsFragment extends ListFragment {
 			ImageView mentorContactImage = holder.imageViewMentorContactMethodIcon;
 			final ContactMethod mentorContactMethod = mentor.getContactMethod();
 			if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.TWITTER)){
-				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
+				mentorContactImage.setImageResource(R.drawable.twitter_icon);
 			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.FACEBOOK)){
-				mentorContactImage.setBackgroundResource(R.drawable.genres_icon);
+				mentorContactImage.setImageResource(R.drawable.ic_facebook);
 			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
-				mentorContactImage.setBackgroundResource(R.drawable.rss_feed);
+				mentorContactImage.setImageResource(R.drawable.email_icon);
 			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.LINKED_IN)){
-				mentorContactImage.setBackgroundResource(R.drawable.tab_active);
+				mentorContactImage.setImageResource(R.drawable.ic_linkedin);
 			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
-				mentorContactImage.setBackgroundResource(R.drawable.ic_launcher);
+				mentorContactImage.setImageResource(R.drawable.ic_phone);
 			}
 							
 				holder.imageViewMentorContactMethodIcon.setOnClickListener(new OnClickListener() {
