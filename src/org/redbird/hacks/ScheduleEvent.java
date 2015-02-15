@@ -10,45 +10,104 @@ public class ScheduleEvent implements Comparable<ScheduleEvent>{
 	
 	private String eventTitle;
 	private String eventDescription;
-	private String eventTime;
+	private String fromTime;
+	private String toTime;
 	private String eventDate;
 	
 	public ScheduleEvent(String eventTitle, String eventDescription,
-			String eventTime, String eventDate) {
+			String fromTime, String toTime, String eventDate) {
 		super();
 		this.eventTitle = eventTitle;
 		this.eventDescription = eventDescription;
-		this.eventTime = eventTime;
+		this.fromTime = fromTime;
+		this.toTime = toTime;
 		this.eventDate = eventDate;
 	}
-	public String getEventTitle() {
+	
+	/**
+	 * @return the fromTime
+	 */
+	public String getFromTime()
+	{
+		return fromTime;
+	}
+
+	/**
+	 * @param fromTime the fromTime to set
+	 */
+	public void setFromTime(String fromTime)
+	{
+		this.fromTime = fromTime;
+	}
+
+	/**
+	 * @return the eventTitle
+	 */
+	public String getEventTitle()
+	{
 		return eventTitle;
 	}
-	public void setEventTitle(String eventTitle) {
+
+	/**
+	 * @param eventTitle the eventTitle to set
+	 */
+	public void setEventTitle(String eventTitle)
+	{
 		this.eventTitle = eventTitle;
 	}
-	public String getEventDescription() {
+
+	/**
+	 * @return the eventDescription
+	 */
+	public String getEventDescription()
+	{
 		return eventDescription;
 	}
-	public void setEventDescription(String eventDescription) {
+
+	/**
+	 * @param eventDescription the eventDescription to set
+	 */
+	public void setEventDescription(String eventDescription)
+	{
 		this.eventDescription = eventDescription;
 	}
-	public String getEventTime() {
-		return eventTime;
+
+	/**
+	 * @return the toTime
+	 */
+	public String getToTime()
+	{
+		return toTime;
 	}
-	public void setEventTime(String eventTime) {
-		this.eventTime = eventTime;
+
+	/**
+	 * @param toTime the toTime to set
+	 */
+	public void setToTime(String toTime)
+	{
+		this.toTime = toTime;
 	}
-	public String getEventDate() {
+
+	/**
+	 * @return the eventDate
+	 */
+	public String getEventDate()
+	{
 		return eventDate;
 	}
-	public void setEventDate(String eventDate) {
+
+	/**
+	 * @param eventDate the eventDate to set
+	 */
+	public void setEventDate(String eventDate)
+	{
 		this.eventDate = eventDate;
 	}
+
 	@Override
 	public int compareTo(ScheduleEvent another) {
 		if(this.eventDate.compareTo(another.getEventDate()) == 0){
-			return this.eventTime.compareTo(another.getEventTime()) > 0 ? 1 : 0;
+			return this.fromTime.compareTo(another.getFromTime()) > 0 ? 1 : 0;
 		}else if (this.eventDate.compareTo(another.getEventDate()) > 0){
 			return 1;
 		}else {

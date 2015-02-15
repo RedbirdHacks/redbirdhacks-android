@@ -9,6 +9,7 @@ package org.redbird.hacks;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -103,11 +104,15 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 	private class RetrieveEvents extends AsyncTask<Void, Void, List<ScheduleEvent>>
 	{
 		private final String	TAG_EVENTS		= "events";
-		private final String	TAG_DATE		= "date";
+		private final String	TAG_FROM		= "from";
+		private final String	TAG_TO		= "to";		
 		private final String	TAG_TIME	= "time";
 		private final String	TAG_TITLE		= "title";
 		private final String	TAG_DESCRIPTION	= "description";
 		private boolean			connectionFailed;
+		private SimpleDateFormat fromTime_date_format = new SimpleDateFormat("h:mm");
+		private SimpleDateFormat toTime_date_format = new SimpleDateFormat("h:mm");		
+		private Calendar cal = Calendar.getInstance();
 
 		@Override
 		protected List<ScheduleEvent> doInBackground(Void... params)
@@ -150,21 +155,26 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 				for (int i = 0; i < eventsArray.length(); i++)
 				{
 					JSONObject a = eventsArray.getJSONObject(i);
-					Long date = a.getLong(TAG_DATE);
-					String time = a.getString(TAG_TIME);
+					Long from = a.getLong(TAG_FROM);
+					Long to = a.getLong(TAG_TO);
 					String title = a.getString(TAG_TITLE);					
 					String description = a.getString(TAG_DESCRIPTION);
 
 					//Convert epoch time to a Date.
-					Calendar cal = Calendar.getInstance();
 					//Unix epoch time is measured in seconds. Multiply by 1000 for milliseconds
-					cal.setTimeInMillis(date * 1000);
-					Log.d("APP", "Long: " + cal.get(Calendar.DAY_OF_MONTH));
+					cal.setTimeInMillis(from * 1000);
 					String month = cal.getDisplayName(Calendar.MONTH, 2, Locale.US);
 					String dayOfMonth = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
 					
+					// Get the from time format and convert from milliseconds to a time format.
+				    String fromTime = fromTime_date_format.format(cal.getTime());
+				    
+				    // Get the to time and convert from milliseconds to a time format.
+					cal.setTimeInMillis(to * 1000);
+				    String toTime = toTime_date_format.format(cal.getTime());
+				    
 					//Add the event to the event list.
-					events.add(new ScheduleEvent(title, description, time, month + " " + dayOfMonth));
+					events.add(new ScheduleEvent(title, description, fromTime, toTime, month + " " + dayOfMonth));
 				}
 			}
 			catch (Exception e)
@@ -185,7 +195,7 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 				}
 			}
 			if(connectionFailed)
-				events.add(new ScheduleEvent("Could not connect to the server", "Please check your connection", "", ""));
+				events.add(new ScheduleEvent("Could not connect to the server", "Please check your connection", "", "", ""));
 			
 			return events;
 

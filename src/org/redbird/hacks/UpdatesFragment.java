@@ -14,8 +14,11 @@ package org.redbird.hacks;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -71,6 +74,9 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 		private final String		TAG_UPDATES_TEXT	= "text";
 		private final String		TAG_UPDATES_DATE	= "date";
 		private boolean				connectionFailed;
+		private Calendar cal = Calendar.getInstance();
+		private SimpleDateFormat updates_date_format = new SimpleDateFormat("MMMM d, yyyy h:mm a");
+
 
 		@Override
 		protected UpdatesInfoFromJSON doInBackground(String... url)
@@ -116,12 +122,20 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 
 				// For each update within the updates JSONArray, grab the
 				// text and the date.
+
 				for (int i = 0; i < updates.length(); i++)
 				{
 					JSONObject a = updates.getJSONObject(i);
+					Long updatesTime = a.getLong(TAG_UPDATES_DATE);
+					//Convert epoch time to a Date.
+					//Unix epoch time is measured in seconds. Multiply by 1000 for milliseconds
+					
+					cal.setTimeInMillis(updatesTime * 1000);					
+					// Get the from time format HH:mm
+				    String updatesDate = updates_date_format.format(cal.getTime());
+				    
 					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
-					updatesInfo.updatesDate[i] = a.getString(TAG_UPDATES_DATE);
-
+					updatesInfo.updatesDate[i] = updatesDate;
 				}
 			}
 			catch (Exception e)
