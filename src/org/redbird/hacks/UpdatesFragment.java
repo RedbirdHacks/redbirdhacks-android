@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,6 +34,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,13 +128,12 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 				for (int i = 0; i < updates.length(); i++)
 				{
 					JSONObject a = updates.getJSONObject(i);
-					Long updatesTime = a.getLong(TAG_UPDATES_DATE);
+					long updatesTime = a.getLong(TAG_UPDATES_DATE);
+					
 					//Convert epoch time to a Date.
 					//Unix epoch time is measured in seconds. Multiply by 1000 for milliseconds
-					
 					cal.setTimeInMillis(updatesTime * 1000);					
-					// Get the from time format HH:mm
-				    String updatesDate = updates_date_format.format(cal.getTime());
+					String updatesDate = DateUtils.getRelativeDateTimeString(getActivity().getBaseContext(), cal.getTimeInMillis(), DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, DateUtils.FORMAT_SHOW_TIME).toString();
 				    
 					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
 					updatesInfo.updatesDate[i] = updatesDate;
