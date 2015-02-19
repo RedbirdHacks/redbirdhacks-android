@@ -124,6 +124,8 @@ public class MentorsFragment extends ListFragment {
 			
 			ImageView mentorContactImage = holder.imageViewMentorContactMethodIcon;
 			final ContactMethod mentorContactMethod = mentor.getContactMethod();
+			
+			//added a nullcheck 
 			if(mentorContactMethod != null){
 				if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.TWITTER)){
 					mentorContactImage.setImageResource(R.drawable.ic_twitter);
