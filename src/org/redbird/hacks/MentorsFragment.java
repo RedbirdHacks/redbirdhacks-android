@@ -121,32 +121,22 @@ public class MentorsFragment extends ListFragment {
 
 			Mentor mentor = mentors.get(position);
 			holder.tvMentorName.setText(mentor.getName());
-			//DONE 1) Uncomment once the json file is updated with
-			//one contact method for mentors and "http:/" in front 
-			//of all URL's
-			//TODO 2) Change the drawables once we have the icons
-			//TODO 3) Remove getContactMethodList() from Mentor TO and
-			//replace with getContactMethod()
 			
-			//Twitter: ic_launcher
-			//Facebook: genres_icon
-			//Email: rss_feed
-			//LinkedIn: tab_active
-			//Phone: ic_launcher
 			ImageView mentorContactImage = holder.imageViewMentorContactMethodIcon;
 			final ContactMethod mentorContactMethod = mentor.getContactMethod();
-			if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.TWITTER)){
-				mentorContactImage.setImageResource(R.drawable.ic_twitter);
-			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.FACEBOOK)){
-				mentorContactImage.setImageResource(R.drawable.ic_facebook);
-			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
-				mentorContactImage.setImageResource(R.drawable.ic_email);
-			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.LINKED_IN)){
-				mentorContactImage.setImageResource(R.drawable.ic_linkedin);
-			} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
-				mentorContactImage.setImageResource(R.drawable.ic_phone);
-			}
-							
+			if(mentorContactMethod != null){
+				if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.TWITTER)){
+					mentorContactImage.setImageResource(R.drawable.ic_twitter);
+				} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.FACEBOOK)){
+					mentorContactImage.setImageResource(R.drawable.ic_facebook);
+				} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.EMAIL)){
+					mentorContactImage.setImageResource(R.drawable.ic_email);
+				} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.LINKED_IN)){
+					mentorContactImage.setImageResource(R.drawable.ic_linkedin);
+				} else if(mentorContactMethod.getContactMethodType().equals(ContactMethodType.PHONE)){
+					mentorContactImage.setImageResource(R.drawable.ic_phone);
+				}
+								
 				holder.imageViewMentorContactMethodIcon.setOnClickListener(new OnClickListener() {
 					
 					@Override
@@ -169,6 +159,7 @@ public class MentorsFragment extends ListFragment {
 											
 					}
 				});
+			}
 //			}
 			return view;
 		}
@@ -280,9 +271,10 @@ public class MentorsFragment extends ListFragment {
 				} catch (Exception squish) {
 				}
 			}
-			if (connectionFailed)
+			if (connectionFailed){
 				mentors.add(new Mentor("Server Connection Error",
 						"Please check your connection", null, ""));
+			}
 
 			return mentors;
 
