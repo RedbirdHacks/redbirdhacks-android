@@ -13,7 +13,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,7 +102,6 @@ public class UpdatesListAdapter extends ArrayAdapter<Updates>
 					hashtagEnding += i + paddingSize + htmlTagSize;
 				}
 				formattedHashtagText.insert(hashtagEnding, "</font>");
-				Log.d("APP", formattedHashtagText.toString());
 
 				// Add onto the padding size in case there is another hashtag in the sentence.
 				paddingSize += totalHtmlTagSize;

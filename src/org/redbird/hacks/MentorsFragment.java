@@ -168,6 +168,11 @@ public class MentorsFragment extends ListFragment {
 
 	}
 
+	/**
+	 * TO DO: Use the Jackson library to parse JSON.
+	 * @author MJ
+	 *
+	 */
 	private class RetrieveMentors extends AsyncTask<Void, Void, List<Mentor>> {
 		private final String TAG_MENTORS = "mentors";
 		private final String TAG_NAME = "name";

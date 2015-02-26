@@ -100,7 +100,12 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 			return instance.getEventDate();
 		}
 	}
-	
+
+	/**
+	 * TO DO: Use the Jackson library to parse JSON.
+	 * @author MJ
+	 *
+	 */	
 	private class RetrieveEvents extends AsyncTask<Void, Void, List<ScheduleEvent>>
 	{
 		private final String	TAG_EVENTS		= "events";
@@ -151,7 +156,7 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 				JSONObject jObject = new JSONObject(jsonString);
 				JSONArray eventsArray = jObject.getJSONArray(TAG_EVENTS);
 				
-				// Grab each mentor.
+				// Grab each event.
 				for (int i = 0; i < eventsArray.length(); i++)
 				{
 					JSONObject a = eventsArray.getJSONObject(i);

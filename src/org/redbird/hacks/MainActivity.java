@@ -18,6 +18,8 @@ import com.parse.ParseException;
 import com.parse.ParsePush;
 import com.parse.SaveCallback;
 
+import android.app.Fragment;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,8 +47,9 @@ public class MainActivity extends FragmentActivity
 		setContentView(R.layout.activity_main);
 		Log.i("MainActivity", "onCreate");
 
+		
 		//TODO: Notifications for new updates
-		//startService(new Intent(this, NotificationService.class));
+		startService(new Intent(this, NotificationService.class));
 				
 		// Initialize and setup the FragmentTabHost
 		topTabs = (FragmentTabHost) findViewById(android.R.id.tabhost);
@@ -72,6 +75,17 @@ public class MainActivity extends FragmentActivity
 		// TO DO: Make custom icons.
 		topTabs.getTabWidget().setBackgroundResource(R.drawable.tab_background_selector);
 		topTabs.getTabWidget().setDividerDrawable(null);
+		
+		// This gets called whenever a user clicks on a notification for a new update. 
+		// The notification will bring them to a specific fragment depending on the type of
+		// notification. After they are brought to the fragment, the notification is cleared.
+		int tabToOpen = getIntent().getIntExtra("fragmentNum", 0);
+		if(tabToOpen != -1) { 
+			topTabs.setCurrentTab(tabToOpen);
+			int notificationID = getIntent().getIntExtra("notificationID", 0);
+			NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.cancel("com.redbird.hacks.notification", notificationID);
+		} 
 
 	}
 

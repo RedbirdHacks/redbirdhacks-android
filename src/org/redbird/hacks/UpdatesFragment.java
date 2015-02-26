@@ -29,6 +29,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -43,12 +44,13 @@ import android.widget.ListView;
 
 public class UpdatesFragment extends Fragment implements OnRefreshListener
 {
-	private final String		url				= "http://redbirdhacks.org/json/announcements.json";
+	private final String		url				= "http://mjhavens.com/announcements.json";
 	private ListView			listViewUpdates;
 	private List<Updates>		legendList;
 	private View				rootView;
 	private UpdatesListAdapter	updatesListAdapter;
 	private SwipeRefreshLayout	swipeLayout;
+	private long newestUpdateTime;
 
 	
 	@Override
@@ -64,10 +66,14 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 		swipeLayout.setColorSchemeResources(R.color.redBirdHacksRed,
 				R.color.orange, R.color.darkred,
 				R.color.white);
-		
 		return rootView;
 	}
 
+	/**
+	 * TO DO: Use the Jackson library to parse JSON.
+	 * @author MJ
+	 *
+	 */
 	private class JSONUpdates extends
 			AsyncTask<String, Void, UpdatesInfoFromJSON>
 	{
@@ -130,6 +136,9 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 					JSONObject a = updates.getJSONObject(i);
 					long updatesTime = a.getLong(TAG_UPDATES_DATE);
 					
+					if(i == 0)
+						newestUpdateTime = a.getLong(TAG_UPDATES_DATE);	
+					
 					//Convert epoch time to a Date.
 					//Unix epoch time is measured in seconds. Multiply by 1000 for milliseconds
 					cal.setTimeInMillis(updatesTime * 1000);					
@@ -182,23 +191,16 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 					legendList.add(new Updates(updatesInfo.updatesText[i],
 							updatesInfo.updatesDate[i]));
 				}
+				Log.d("APP", "Sending broadcast");
+				Intent i = new Intent("com.redbird.hacks.MESSAGE");
+				i.putExtra("newestTime", newestUpdateTime);
+				getActivity().sendBroadcast(i);
 			}
 			else
 				legendList.add(new Updates("Unable to connect to the server!",
 						"Please check your internet connection."));
 
 			listViewUpdates.setAdapter(updatesListAdapter);
-			// listViewUpdates.setOnItemClickListener(new OnItemClickListener()
-			// {
-			// @Override2
-			// public void onItemClick(AdapterView<?> parent, View view, int
-			// position, long id) {
-			// Updates o = (Updates) parent.getItemAtPosition(position);
-			// Toast.makeText(getActivity(), o.getText().toString(),
-			// Toast.LENGTH_SHORT).show();
-			// }
-			// });
-
 		}
 
 	}
@@ -250,6 +252,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 		new JSONUpdates().execute(url);
 		updatesListAdapter.notifyDataSetChanged();
 		swipeLayout.setRefreshing(false);
+
 	}
 
 	/**
