@@ -213,6 +213,7 @@ public class NotificationService extends Service
 				{
 					JSONObject a = updates.getJSONObject(0);
 					long newestUpdateTime = a.getLong(TAG_UPDATES_DATE);
+					Log.d(TAG, "oldUpdateTime: " + oldUpdateTime + " newestUpdateTime: " + newestUpdateTime);
 					if (oldUpdateTime != -1
 							&& (newestUpdateTime > oldUpdateTime))
 					{
@@ -245,6 +246,7 @@ public class NotificationService extends Service
 					}
 					else if (oldUpdateTime == -1)
 					{
+						Log.d(TAG, "oldUpdateTime = newestUpdateTime " + oldUpdateTime);
 						// In case the activity is destroyed and re-created, we
 						// want to make sure that we have a value
 						// set for the oldUpdateTime. Otherwise, the user would
@@ -256,7 +258,6 @@ public class NotificationService extends Service
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
 				// The connection to the server failed.
 				// We don't want to display any error messages since this is
 				// just a routine check for new updates.
@@ -387,7 +388,6 @@ public class NotificationService extends Service
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
 				// The connection to the server failed.
 			}
 			finally

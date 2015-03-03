@@ -44,7 +44,7 @@ import android.widget.ListView;
 
 public class UpdatesFragment extends Fragment implements OnRefreshListener
 {
-	private final String		url				= "http://mjhavens.com/announcements.json";
+	private final String		url				= "http://redbirdhacks.org/json/announcements.json";
 	private ListView			listViewUpdates;
 	private List<Updates>		legendList;
 	private View				rootView;
