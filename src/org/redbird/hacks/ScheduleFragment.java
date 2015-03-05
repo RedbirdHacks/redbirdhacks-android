@@ -7,13 +7,14 @@
 package org.redbird.hacks;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -36,6 +37,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 
 public class ScheduleFragment extends android.support.v4.app.ListFragment {
 	
@@ -119,90 +125,197 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 		private SimpleDateFormat toTime_date_format = new SimpleDateFormat("h:mm");		
 		private Calendar cal = Calendar.getInstance();
 
+		@SuppressWarnings("deprecation")
 		@Override
 		protected List<ScheduleEvent> doInBackground(Void... params)
 		{
 			List<ScheduleEvent> events = new ArrayList<ScheduleEvent>();
 			final String url = "http://redbirdhacks.org/json/events.json";
 			connectionFailed = false;
-			DefaultHttpClient httpclient = new DefaultHttpClient(
-					new BasicHttpParams());
-			HttpPost httppost = new HttpPost(url);
-
-			httppost.setHeader("Content-type", "application/json");
-
-			InputStream inputStream = null;
-			String jsonString = null;
-			try
-			{
-				HttpResponse response = httpclient.execute(httppost);
-				HttpEntity entity = response.getEntity();
-
-				inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream, "UTF-8"), 8);
-				StringBuilder sb = new StringBuilder();
-
-				String line = null;
-
-				// Read each line of the JSON and build it into a String.
-				while ((line = reader.readLine()) != null)
-				{
-					sb.append(line + "\n");
-				}
-				jsonString = sb.toString();
-
-				// Convert the result String to a JSONObject.
-				JSONObject jObject = new JSONObject(jsonString);
-				JSONArray eventsArray = jObject.getJSONArray(TAG_EVENTS);
+			
+			
+			
+			//http://www.mkyong.com/java/jackson-streaming-api-to-read-and-write-json/
+			//http://wiki.fasterxml.com/JacksonInFiveMinutes
+			//http://wiki.fasterxml.com/JacksonStreamingApi
+			//http://mark.gg/2013/05/26/tips-for-android-json-parsing-using-jackson/
+			
+			//https://capdroid.wordpress.com/2012/07/13/android-simple-json-parsing-using-jackson-apis/
+			
+			JsonFactory factory = new JsonFactory();
+			try {
+				JsonParser jParser = factory.createJsonParser(new URL(url));
+				jParser.nextToken();	
 				
-				// Grab each event.
-				for (int i = 0; i < eventsArray.length(); i++)
-				{
-					JSONObject a = eventsArray.getJSONObject(i);
-					Long from = a.getLong(TAG_FROM);
-					Long to = a.getLong(TAG_TO);
-					String title = a.getString(TAG_TITLE);					
-					String description = a.getString(TAG_DESCRIPTION);
+				Long from = null, to = null;
+				String title = null, description = null;
+				
+				while (jParser.getCurrentToken() != JsonToken.END_OBJECT) {
+					jParser.nextToken();
 
-					//Convert epoch time to a Date.
-					//Unix epoch time is measured in seconds. Multiply by 1000 for milliseconds
-					cal.setTimeInMillis(from * 1000);
-					String month = cal.getDisplayName(Calendar.MONTH, 2, Locale.US);
-					String dayOfMonth = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+					String fieldname = jParser.getCurrentName();
+
+					if (jParser.getCurrentToken() == JsonToken.START_ARRAY) {
+						break;
+						//jParser.nextToken();
+					}
 					
-					// Get the from time format and convert from milliseconds to a time format.
-				    String fromTime = fromTime_date_format.format(cal.getTime());
-				    
-				    // Get the to time and convert from milliseconds to a time format.
-					cal.setTimeInMillis(to * 1000);
-				    String toTime = toTime_date_format.format(cal.getTime());
-				    
-					//Add the event to the event list.
-					events.add(new ScheduleEvent(title, description, fromTime, toTime, month + " " + dayOfMonth));
-				}
-			}
-			catch (Exception e)
-			{
-				// The connection to the server failed. Throw a flag so that we can catch it later.
+					if (TAG_EVENTS.equals(fieldname)) {
+
+						while (jParser.getCurrentToken() != JsonToken.END_OBJECT) {
+							jParser.nextToken();
+
+							fieldname = jParser.getCurrentName();
+							String tokenValue1 = null;
+							
+							if (jParser.getCurrentToken() == JsonToken.START_ARRAY) {
+								//break;
+								jParser.nextToken();
+							}
+							
+							if(TAG_FROM.equals(fieldname)){
+								jParser.nextToken();
+								
+								tokenValue1 = jParser.getText();
+								if (null != tokenValue1 && tokenValue1.trim().length() > 0)
+									from = Long.parseLong(tokenValue1);
+									Log.d("X", from + "");
+									
+							} else if(TAG_TO.equals(fieldname)){
+								jParser.nextToken();
+								
+								tokenValue1 = jParser.getText();
+								if (null != tokenValue1 && tokenValue1.trim().length() > 0)
+									to = Long.parseLong(tokenValue1);
+									Log.d("X", to + "");
+									
+							} else if(TAG_TITLE.equals(fieldname)){
+								jParser.nextToken();
+								
+								tokenValue1 = jParser.getText();
+								if (null != tokenValue1 && tokenValue1.trim().length() > 0)
+									title = tokenValue1;
+									Log.d("X", title);
+									
+							} else if(TAG_DESCRIPTION.equals(fieldname)){
+								jParser.nextToken();
+								
+								tokenValue1 = jParser.getText();
+								if (null != tokenValue1 && tokenValue1.trim().length() > 0)
+									description = tokenValue1;
+									Log.d("X", description + "");
+							}
+						}
+					}
+						
+						//Convert epoch time to a Date.
+						//Unix epoch time is measured in seconds. Multiply by 1000 for milliseconds
+						cal.setTimeInMillis(from * 1000);
+						String month = cal.getDisplayName(Calendar.MONTH, 2, Locale.US);
+						String dayOfMonth = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+						
+						// Get the from time format and convert from milliseconds to a time format.
+					    String fromTime = fromTime_date_format.format(cal.getTime());
+					    
+					    // Get the to time and convert from milliseconds to a time format.
+						cal.setTimeInMillis(to * 1000);
+					    String toTime = toTime_date_format.format(cal.getTime());
+					    
+						//Add the event to the event list.
+						events.add(new ScheduleEvent(title, description, fromTime, toTime, month + " " + dayOfMonth));	
+					}
+			} catch (Exception e) {
+			// The connection to the server failed. Throw a flag so that we can catch it later.
 				connectionFailed = true;
 				e.printStackTrace();
 			}
-			finally
-			{
-				try
-				{
-					if (inputStream != null)
-						inputStream.close();
-				}
-				catch (Exception squish)
-				{
-				}
-			}
+
 			if(connectionFailed)
 				events.add(new ScheduleEvent("Could not connect to the server", "Please check your connection", "", "", ""));
 			
 			return events;
+			
+			
+			
+
+//			DefaultHttpClient httpclient = new DefaultHttpClient(
+//					new BasicHttpParams());
+//			HttpPost httppost = new HttpPost(url);
+//
+//			httppost.setHeader("Content-type", "application/json");
+//
+//			InputStream inputStream = null;
+//			String jsonString = null;
+//			try
+//			{
+//				HttpResponse response = httpclient.execute(httppost);
+//				HttpEntity entity = response.getEntity();
+//
+//				inputStream = entity.getContent();
+//				BufferedReader reader = new BufferedReader(
+//						new InputStreamReader(inputStream, "UTF-8"), 8);
+//				StringBuilder sb = new StringBuilder();
+//
+//				String line = null;
+//
+//				// Read each line of the JSON and build it into a String.
+//				while ((line = reader.readLine()) != null)
+//				{
+//					sb.append(line + "\n");
+//				}
+//				jsonString = sb.toString();
+//
+//				// Convert the result String to a JSONObject.
+//				JSONObject jObject = new JSONObject(jsonString);
+//				JSONArray eventsArray = jObject.getJSONArray(TAG_EVENTS);
+//				
+//				// Grab each event.
+//				for (int i = 0; i < eventsArray.length(); i++)
+//				{
+//					JSONObject a = eventsArray.getJSONObject(i);
+//					Long from = a.getLong(TAG_FROM);
+//					Long to = a.getLong(TAG_TO);
+//					String title = a.getString(TAG_TITLE);					
+//					String description = a.getString(TAG_DESCRIPTION);
+//
+//					//Convert epoch time to a Date.
+//					//Unix epoch time is measured in seconds. Multiply by 1000 for milliseconds
+//					cal.setTimeInMillis(from * 1000);
+//					String month = cal.getDisplayName(Calendar.MONTH, 2, Locale.US);
+//					String dayOfMonth = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+//					
+//					// Get the from time format and convert from milliseconds to a time format.
+//				    String fromTime = fromTime_date_format.format(cal.getTime());
+//				    
+//				    // Get the to time and convert from milliseconds to a time format.
+//					cal.setTimeInMillis(to * 1000);
+//				    String toTime = toTime_date_format.format(cal.getTime());
+//				    
+//					//Add the event to the event list.
+//					events.add(new ScheduleEvent(title, description, fromTime, toTime, month + " " + dayOfMonth));
+//				}
+//			}
+//			catch (Exception e)
+//			{
+//				// The connection to the server failed. Throw a flag so that we can catch it later.
+//				connectionFailed = true;
+//				e.printStackTrace();
+//			}
+//			finally
+//			{
+//				try
+//				{
+//					if (inputStream != null)
+//						inputStream.close();
+//				}
+//				catch (Exception squish)
+//				{
+//				}
+//			}
+//			if(connectionFailed)
+//				events.add(new ScheduleEvent("Could not connect to the server", "Please check your connection", "", "", ""));
+//			
+//			return events;
 
 		}
 	}
