@@ -6,6 +6,9 @@
 **/
 package org.redbird.hacks;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ScheduleEvent implements Comparable<ScheduleEvent>{
 	
 	private String eventTitle;
@@ -13,6 +16,16 @@ public class ScheduleEvent implements Comparable<ScheduleEvent>{
 	private String fromTime;
 	private String toTime;
 	private String eventDate;
+	
+	@JsonCreator
+	public ScheduleEvent(@JsonProperty("title") String eventTitle, @JsonProperty("description") String eventDescription,
+			@JsonProperty("from") String fromTime, @JsonProperty("to") String toTime) {
+		super();
+		this.eventTitle = eventTitle;
+		this.eventDescription = eventDescription;
+		this.fromTime = fromTime;
+		this.toTime = toTime;
+	}
 	
 	public ScheduleEvent(String eventTitle, String eventDescription,
 			String fromTime, String toTime, String eventDate) {

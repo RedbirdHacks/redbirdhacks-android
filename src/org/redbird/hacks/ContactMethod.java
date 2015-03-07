@@ -8,12 +8,20 @@ package org.redbird.hacks;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class ContactMethod implements Serializable, Comparable<ContactMethod> {
 
 	private static final long serialVersionUID = 9176554236321826893L;
 	
 	private ContactMethodType contactMethodType;
 	private String contactActionURL;
+	
+	@JsonCreator
+	public ContactMethod(String contactType, ContactMethodType contactMethodType){
+		this.contactMethodType = contactMethodType;
+		contactType = contactMethodType.toString();
+	}
 	
 	public ContactMethod(ContactMethodType contactMethodType, String contactActionURL) {
 		super();

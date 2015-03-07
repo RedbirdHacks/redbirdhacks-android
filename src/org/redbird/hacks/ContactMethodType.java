@@ -8,12 +8,22 @@ package org.redbird.hacks;
 
 public enum ContactMethodType {
 
-	TWITTER, 
-	LINKED_IN, 
-	GOOGLE_PLUS, 
-	SMS, 
-	EMAIL, 
-	PHONE, 
-	FACEBOOK, 
-	NONE
+	TWITTER ("twitter"), 
+	LINKED_IN ("linkedin"), 
+	GOOGLE_PLUS ("googleplus"), 
+	SMS ("sms"), 
+	EMAIL ("email"), 
+	PHONE ("phone"), 
+	FACEBOOK ("facebook"), 
+	NONE ("none");
+	
+	private final String contactMethodType;       
+
+    private ContactMethodType(String contactMethodType) {
+        this.contactMethodType = contactMethodType;
+    }
+
+    public String toString(){
+       return contactMethodType;
+    }
 }

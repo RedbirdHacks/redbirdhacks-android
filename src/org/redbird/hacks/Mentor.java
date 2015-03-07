@@ -9,8 +9,11 @@ package org.redbird.hacks;
 import java.io.Serializable;
 import java.util.List;
 
-import android.util.Log;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties
 public class Mentor implements Serializable, Comparable<Mentor> {
 
 	private static final long serialVersionUID = -862821953832879532L;
@@ -18,11 +21,36 @@ public class Mentor implements Serializable, Comparable<Mentor> {
 	private String specialty;
 	private List<ContactMethod> contactMethodsList;
 	private String description;
-
 	private ContactMethod contactMethod;
 
-	public Mentor(String name, String specialty,
-			ContactMethod contactMethod, String description) {
+//	@JsonCreator
+//	public Mentor(@JsonProperty("name") String name,
+//			@JsonProperty("specialty") String specialty,
+//			@JsonProperty("contacts") List<ContactType> contactType,
+//			@JsonProperty("description") String description) {
+//		super();
+//		this.name = name;
+//		this.specialty = specialty;
+//		this.setContactType(contactType);
+//		this.description = description;
+//	}
+
+	@JsonCreator
+	public Mentor(@JsonProperty("name") String name,
+			@JsonProperty("specialty") String specialty,
+			List<ContactMethod> contactMethodsList,
+			ContactMethod contactMethod,
+			@JsonProperty("description") String description) {
+		super();
+		this.name = name;
+		this.specialty = specialty;
+		this.contactMethod = contactMethod;
+		this.description = description;
+		this.contactMethodsList = contactMethodsList;
+	}
+
+	public Mentor(String name, String specialty, ContactMethod contactMethod,
+			String description) {
 		super();
 		this.name = name;
 		this.specialty = specialty;
@@ -82,5 +110,13 @@ public class Mentor implements Serializable, Comparable<Mentor> {
 			return 1;
 		}
 		return -1;
+	}
+
+	public List<ContactMethod> getContactMethodsList() {
+		return contactMethodsList;
+	}
+
+	public void setContactMethodsList(List<ContactMethod> contactMethodsList) {
+		this.contactMethodsList = contactMethodsList;
 	}
 }

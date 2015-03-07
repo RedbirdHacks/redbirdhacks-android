@@ -1,19 +1,20 @@
 /**
-*  UpdatesFragment.java
-*  RedbirdHacks
-*
-* * This fragment gets called when the app is initialized.
+ *  UpdatesFragment.java
+ *  RedbirdHacks
+ *
+ * * This fragment gets called when the app is initialized.
  * 
  * It references the custom ListView inside updates_fragment_layout.xml and adds items to the list.
  * The list is dynamically populated by parsing JSON Objects from the RedBirdHacks website.
  * 
-*  Created by MJ Havens on 10/18/14.
-**/
+ *  Created by MJ Havens on 10/18/14.
+ **/
 package org.redbird.hacks;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +30,11 @@ import org.apache.http.params.BasicHttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,21 +48,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-public class UpdatesFragment extends Fragment implements OnRefreshListener
-{
-	private final String		url				= "http://redbirdhacks.org/json/announcements.json";
-	private ListView			listViewUpdates;
-	private List<Updates>		legendList;
-	private View				rootView;
-	private UpdatesListAdapter	updatesListAdapter;
-	private SwipeRefreshLayout	swipeLayout;
+public class UpdatesFragment extends Fragment implements OnRefreshListener {
+	private final String url = "http://redbirdhacks.org/json/announcements.json";
+	private ListView listViewUpdates;
+	private List<Updates> legendList;
+	private View rootView;
+	private UpdatesListAdapter updatesListAdapter;
+	private SwipeRefreshLayout swipeLayout;
 	private long newestUpdateTime;
 
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState)
-	{
+			Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.updates_fragment_layout,
 				container, false);
 
@@ -64,115 +67,154 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 				.findViewById(R.id.swipe_container);
 		swipeLayout.setOnRefreshListener(this);
 		swipeLayout.setColorSchemeResources(R.color.redBirdHacksRed,
-				R.color.orange, R.color.darkred,
-				R.color.white);
+				R.color.orange, R.color.darkred, R.color.white);
 		return rootView;
 	}
 
 	/**
 	 * TO DO: Use the Jackson library to parse JSON.
+	 * 
 	 * @author MJ
-	 *
+	 * 
 	 */
 	private class JSONUpdates extends
-			AsyncTask<String, Void, UpdatesInfoFromJSON>
-	{
-		private UpdatesInfoFromJSON	updatesInfo;
-		private final String		TAG_UPDATES			= "announcements";
-		private final String		TAG_UPDATES_TEXT	= "text";
-		private final String		TAG_UPDATES_DATE	= "date";
-		private boolean				connectionFailed;
+			AsyncTask<String, Void, UpdatesInfoFromJSON> {
+		private UpdatesInfoFromJSON updatesInfo;
+		private final String TAG_UPDATES = "announcements";
+		private final String TAG_UPDATES_TEXT = "text";
+		private final String TAG_UPDATES_DATE = "date";
+		private boolean connectionFailed;
 		private Calendar cal = Calendar.getInstance();
-		private SimpleDateFormat updates_date_format = new SimpleDateFormat("MMMM d, yyyy h:mm a");
-
+		private SimpleDateFormat updates_date_format = new SimpleDateFormat(
+				"MMMM d, yyyy h:mm a");
 
 		@Override
-		protected UpdatesInfoFromJSON doInBackground(String... url)
-		{
+		protected UpdatesInfoFromJSON doInBackground(String... url) {
 			connectionFailed = false;
-			DefaultHttpClient httpclient = new DefaultHttpClient(
-					new BasicHttpParams());
-			HttpPost httppost = new HttpPost(url[0]);
 			
-			httppost.setHeader("Content-type", "application/json");
-
-			InputStream inputStream = null;
-			String jsonString = null;
-			try
-			{
-				HttpResponse response = httpclient.execute(httppost);
-				HttpEntity entity = response.getEntity();
-
-				inputStream = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(inputStream, "UTF-8"), 8);
-				StringBuilder sb = new StringBuilder();
-
-				String line = null;
-
-				// Read each line of the JSON and build it into a String.
-				while ((line = reader.readLine()) != null)
-				{
-					sb.append(line + "\n");
-				}
-				jsonString = sb.toString();
-
-				// Convert the result String to a JSONObject.
-				JSONObject jObject = new JSONObject(jsonString);
-
-				// Updates is an array that contains each individual update.
-				// Set the "updates" tag to a JSONArray
-
-				JSONArray updates = jObject.getJSONArray(TAG_UPDATES);
+			ObjectMapper mapper = new ObjectMapper(); 
+			
+			//so that it doesn't joke on the "eventDate" variable in ScheduleEvent
+			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			
+			try {
+				URL json = new URL(url[0]);
+				JsonNode node = mapper.readTree(json);
+				node = node.get(TAG_UPDATES);
+				
+				TypeReference<List<Updates>> typeRef = new TypeReference<List<Updates>>(){};
+				List<Updates> updatesList = mapper.readValue(node.traverse(), typeRef);
+				
 				updatesInfo = new UpdatesInfoFromJSON();
-				updatesInfo.updatesText = new String[updates.length()];
-				updatesInfo.updatesDate = new String[updates.length()];
-
-				// For each update within the updates JSONArray, grab the
-				// text and the date.
-
-				for (int i = 0; i < updates.length(); i++)
-				{
-					JSONObject a = updates.getJSONObject(i);
-					long updatesTime = a.getLong(TAG_UPDATES_DATE);
+				updatesInfo.updatesText = new String[updatesList.size()];
+				updatesInfo.updatesDate = new String[updatesList.size()];
+				
+				for(int i = 0; i < updatesList.size(); i++){
+					Updates u = updatesList.get(i);
 					
-					if(i == 0)
-						newestUpdateTime = a.getLong(TAG_UPDATES_DATE);	
+					long updatesTime = Long.parseLong(u.getDate());
+					String updatesText = u.getText();
+//					from = Long.parseLong(e.getFromTime());
+//					to = Long.parseLong(e.getToTime());
+//					title = e.getEventTitle();
+//					description = e.getEventDescription();
 					
-					//Convert epoch time to a Date.
-					//Unix epoch time is measured in seconds. Multiply by 1000 for milliseconds
-					cal.setTimeInMillis(updatesTime * 1000);					
-					String updatesDate = DateUtils.getRelativeDateTimeString(getActivity().getBaseContext(), cal.getTimeInMillis(), DateUtils.SECOND_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, DateUtils.FORMAT_SHOW_TIME).toString();
-				    
-					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
+					// Convert epoch time to a Date.
+					// Unix epoch time is measured in seconds. Multiply by 1000
+					// for milliseconds
+					cal.setTimeInMillis(updatesTime * 1000);
+					String updatesDate = DateUtils.getRelativeDateTimeString(
+							getActivity().getBaseContext(),
+							cal.getTimeInMillis(), DateUtils.SECOND_IN_MILLIS,
+							DateUtils.WEEK_IN_MILLIS,
+							DateUtils.FORMAT_SHOW_TIME).toString();
+					
+					updatesInfo.updatesText[i] = updatesText;
 					updatesInfo.updatesDate[i] = updatesDate;
 				}
-			}
-			catch (Exception e)
-			{
-				// The connection to the server failed. Throw a flag so that we can
-				// catch it in onPostExecute().
+			} catch (Exception e) {
 				connectionFailed = true;
 				e.printStackTrace();
-			}
-			finally
-			{
-				try
-				{
-					if (inputStream != null)
-						inputStream.close();
-				}
-				catch (Exception squish)
-				{
-				}
-			}
+			}			
+			
+//			DefaultHttpClient httpclient = new DefaultHttpClient(
+//					new BasicHttpParams());
+//			HttpPost httppost = new HttpPost(url[0]);
+//
+//			httppost.setHeader("Content-type", "application/json");
+//
+//			InputStream inputStream = null;
+//			String jsonString = null;
+//			try {
+//				HttpResponse response = httpclient.execute(httppost);
+//				HttpEntity entity = response.getEntity();
+//
+//				inputStream = entity.getContent();
+//				BufferedReader reader = new BufferedReader(
+//						new InputStreamReader(inputStream, "UTF-8"), 8);
+//				StringBuilder sb = new StringBuilder();
+//
+//				String line = null;
+//
+//				// Read each line of the JSON and build it into a String.
+//				while ((line = reader.readLine()) != null) {
+//					sb.append(line + "\n");
+//				}
+//				jsonString = sb.toString();
+//
+//				// Convert the result String to a JSONObject.
+//				JSONObject jObject = new JSONObject(jsonString);
+//
+//				// Updates is an array that contains each individual update.
+//				// Set the "updates" tag to a JSONArray
+//
+//				JSONArray updates = jObject.getJSONArray(TAG_UPDATES);
+//				updatesInfo = new UpdatesInfoFromJSON();
+//				updatesInfo.updatesText = new String[updates.length()];
+//				updatesInfo.updatesDate = new String[updates.length()];
+//
+//				// For each update within the updates JSONArray, grab the
+//				// text and the date.
+//
+//				for (int i = 0; i < updates.length(); i++) {
+//					JSONObject a = updates.getJSONObject(i);
+//					long updatesTime = a.getLong(TAG_UPDATES_DATE);
+//
+//					if (i == 0)
+//						newestUpdateTime = a.getLong(TAG_UPDATES_DATE);
+//
+//					// Convert epoch time to a Date.
+//					// Unix epoch time is measured in seconds. Multiply by 1000
+//					// for milliseconds
+//					cal.setTimeInMillis(updatesTime * 1000);
+//					String updatesDate = DateUtils.getRelativeDateTimeString(
+//							getActivity().getBaseContext(),
+//							cal.getTimeInMillis(), DateUtils.SECOND_IN_MILLIS,
+//							DateUtils.WEEK_IN_MILLIS,
+//							DateUtils.FORMAT_SHOW_TIME).toString();
+//
+//					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
+//					updatesInfo.updatesDate[i] = updatesDate;
+//				}
+//			} catch (Exception e) {
+//				// The connection to the server failed. Throw a flag so that we
+//				// can
+//				// catch it in onPostExecute().
+//				connectionFailed = true;
+//				e.printStackTrace();
+//			} finally {
+//				try {
+//					if (inputStream != null)
+//						inputStream.close();
+//				} catch (Exception squish) {
+//				}
+//			}
 			return updatesInfo;
 
 		}
 
 		@Override
-		protected void onPostExecute(UpdatesInfoFromJSON updatesInfo)
-		{
+		protected void onPostExecute(UpdatesInfoFromJSON updatesInfo) {
 			super.onPostExecute(updatesInfo);
 			// This executes after the doInBackground() method is finished.
 			// It will set all of the update text and dates to a view in the
@@ -182,11 +224,9 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 					.findViewById(R.id.updatesFeed_List);
 
 			// Make sure that we were able to connect to the server.
-			if (!connectionFailed)
-			{
+			if (!connectionFailed) {
 				// For every update...
-				for (int i = 0; i < updatesInfo.updatesText.length; i++)
-				{
+				for (int i = 0; i < updatesInfo.updatesText.length; i++) {
 					// Add the text and date to the ListView.
 					legendList.add(new Updates(updatesInfo.updatesText[i],
 							updatesInfo.updatesDate[i]));
@@ -195,8 +235,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 				Intent i = new Intent("com.redbird.hacks.MESSAGE");
 				i.putExtra("newestTime", newestUpdateTime);
 				getActivity().sendBroadcast(i);
-			}
-			else
+			} else
 				legendList.add(new Updates("Unable to connect to the server!",
 						"Please check your internet connection."));
 
@@ -210,40 +249,36 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 	 * update date as an array to the onPostExecute() method of the AsyncTask.
 	 * 
 	 * @author MJ Havens <me@mjhavens.com>
-	 *
+	 * 
 	 */
-	private class UpdatesInfoFromJSON
-	{
-		String	updatesText[];
-		String	updatesDate[];
+	private class UpdatesInfoFromJSON {
+		String updatesText[];
+		String updatesDate[];
 	}
 
 	@Override
-	public void onPause()
-	{
+	public void onPause() {
 		super.onPause();
 	}
 
 	/**
-	 * Gets called right before the fragment becomes active.
-	 * This is how the list view initially gets the updates.
+	 * Gets called right before the fragment becomes active. This is how the
+	 * list view initially gets the updates.
 	 */
 	@Override
-	public void onResume()
-	{
+	public void onResume() {
 		super.onResume();
 
 		// Get the JSON updates in the background and set each update to a
 		// ListItem.
 		getUpdates();
-		
+
 	}
 
 	/**
 	 * This method will refresh the list view with the latest updates.
 	 */
-	private void getUpdates()
-	{
+	private void getUpdates() {
 		swipeLayout.setRefreshing(true);
 		Log.d("APP", "Refreshing the adapter");
 		legendList = new ArrayList<Updates>();
@@ -259,10 +294,9 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener
 	 * A listener that is called when a user swipes down on the screen.
 	 */
 	@Override
-	public void onRefresh()
-	{
+	public void onRefresh() {
 		Log.d("APP", "Refreshed");
-		getUpdates(); 
+		getUpdates();
 	}
 
 }
