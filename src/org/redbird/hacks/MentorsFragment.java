@@ -174,106 +174,6 @@ public class MentorsFragment extends ListFragment {
 		}
 
 	}
-	
-//	JsonFactory factory = new JsonFactory();
-//	try {
-//		JsonParser jParser = factory.createJsonParser(new URL(url));
-//
-//		jParser.nextToken();
-//
-//		Long from = null, to = null;
-//		String title = null, description = null;
-//
-//		while (jParser.getCurrentToken() != JsonToken.END_OBJECT) {
-//			jParser.nextToken();
-//
-//			String fieldname = jParser.getCurrentName();
-//
-//			if (jParser.getCurrentToken() == JsonToken.START_ARRAY) {
-//				break;
-//				// jParser.nextToken();
-//			}
-//
-//			if (TAG_EVENTS.equals(fieldname)) {
-//				while (jParser.getCurrentToken() != JsonToken.END_OBJECT) {
-//					jParser.nextToken();
-//
-//					fieldname = jParser.getCurrentName();
-//					String tokenValue1 = null;
-//
-//					if (jParser.getCurrentToken() == JsonToken.START_ARRAY) {
-//						// break;
-//						jParser.nextToken();
-//					}
-//
-//					if (TAG_FROM.equals(fieldname)) {
-//						jParser.nextToken();
-//
-//						tokenValue1 = jParser.getText();
-//						if (null != tokenValue1
-//								&& tokenValue1.trim().length() > 0)
-//							from = Long.parseLong(tokenValue1);
-//						Log.d("X", from + "");
-//
-//					} else if (TAG_TO.equals(fieldname)) {
-//						jParser.nextToken();
-//
-//						tokenValue1 = jParser.getText();
-//						if (null != tokenValue1
-//								&& tokenValue1.trim().length() > 0)
-//							to = Long.parseLong(tokenValue1);
-//						Log.d("X", to + "");
-//
-//					} else if (TAG_TITLE.equals(fieldname)) {
-//						jParser.nextToken();
-//
-//						tokenValue1 = jParser.getText();
-//						if (null != tokenValue1
-//								&& tokenValue1.trim().length() > 0)
-//							title = tokenValue1;
-//						Log.d("X", title);
-//
-//					} else if (TAG_DESCRIPTION.equals(fieldname)) {
-//						jParser.nextToken();
-//
-//						tokenValue1 = jParser.getText();
-//						if (null != tokenValue1
-//								&& tokenValue1.trim().length() > 0)
-//							description = tokenValue1;
-//						Log.d("X", description + "");
-//					}
-//				}
-//			}
-//
-//			// Convert epoch time to a Date.
-//			// Unix epoch time is measured in seconds. Multiply by 1000
-//			// for milliseconds
-//			cal.setTimeInMillis(from * 1000);
-//			String month = cal.getDisplayName(Calendar.MONTH, 2,
-//					Locale.US);
-//			String dayOfMonth = String.valueOf(cal
-//					.get(Calendar.DAY_OF_MONTH));
-//
-//			// Get the from time format and convert from milliseconds to
-//			// a time format.
-//			String fromTime = fromTime_date_format
-//					.format(cal.getTime());
-//
-//			// Get the to time and convert from milliseconds to a time
-//			// format.
-//			cal.setTimeInMillis(to * 1000);
-//			String toTime = toTime_date_format.format(cal.getTime());
-//
-//			// Add the event to the event list.
-//			events.add(new ScheduleEvent(title, description, fromTime,
-//					toTime, month + " " + dayOfMonth));
-//		}
-//	} catch (Exception e) {
-//		// The connection to the server failed. Throw a flag so that we
-//		// can catch it later.
-//		connectionFailed = true;
-//		e.printStackTrace();
-//	}
 
 	/**
 	 * TO DO: Use the Jackson library to parse JSON.
@@ -338,36 +238,8 @@ public class MentorsFragment extends ListFragment {
 //						description);
 //				mentors.add(m);
 //				
-//					//contactMethod = m.getContactMethod();
+//				//contactMethod = m.getContactMethod();
 //					
-////					if (!b.getString("twitter").equals("")) {
-////						contactMethod = new ContactMethod(
-////								ContactMethodType.TWITTER,
-////								b.getString(TAG_TWITTER));
-////						//contactMethodsList.add(contactMethod);
-////					}
-////					if (!b.getString("facebook").equals("")) {
-////						contactMethod = new ContactMethod(
-////								ContactMethodType.FACEBOOK,
-////								b.getString(TAG_FACEBOOK));
-////						//contactMethodsList.add(contactMethod);
-////					}
-////					if (!b.getString("email").equals("")) {
-////						contactMethod = new ContactMethod(
-////								ContactMethodType.EMAIL, b.getString(TAG_EMAIL));
-////						//contactMethodsList.add(contactMethod);
-////					}
-////					if (!b.getString("linkedin").equals("")) {
-////						contactMethod = new ContactMethod(
-////								ContactMethodType.LINKED_IN,
-////								b.getString(TAG_LINKEDIN));
-////						//contactMethodsList.add(contactMethod);
-////					}
-////					if (!b.getString("phone").equals("")) {
-////						contactMethod = new ContactMethod(
-////								ContactMethodType.PHONE, b.getString(TAG_PHONE));
-////						//contactMethodsList.add(contactMethod);
-////					}
 //					
 //			} catch (Exception e) {
 //				// The connection to the server failed. Throw a flag so that we
