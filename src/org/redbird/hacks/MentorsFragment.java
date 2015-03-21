@@ -480,7 +480,7 @@ public class MentorsFragment extends ListFragment {
 			return mentors;
 		}
 	}
-
+	
 	static class MentorHolder {
 		public TextView tvMentorName;
 		public ImageView imageViewMentorContactMethodIcon;
