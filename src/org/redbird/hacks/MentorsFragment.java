@@ -198,7 +198,7 @@ public class MentorsFragment extends ListFragment {
 			List<Mentor> mentors = new ArrayList<Mentor>();
 			final String url = "http://redbirdhacks.org/json/mentors.json";
 			connectionFailed = false;
-			
+		
 //			String name = null, specialty = null, description = null;
 //			ContactMethod contactMethod = null;
 //			List<ContactMethod> contacts = null;
