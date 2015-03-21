@@ -299,253 +299,185 @@ public class MentorsFragment extends ListFragment {
 			final String url = "http://redbirdhacks.org/json/mentors.json";
 			connectionFailed = false;
 			
-			String name = null, specialty = null, description = null;
-			ContactMethod contactMethod = null;
-			List<ContactMethod> contacts = null;
-			ContactMethodType contactMethodType = null;
-			
-//			DefaultHttpClient httpclient = new DefaultHttpClient(
-//					new BasicHttpParams());
-//			HttpPost httppost = new HttpPost(url);
-//
-//			httppost.setHeader("Content-type", "application/json");
-//
-//			InputStream inputStream = null;
-//			String jsonString = null;
+//			String name = null, specialty = null, description = null;
+//			ContactMethod contactMethod = null;
+//			List<ContactMethod> contacts = null;
+//			ContactMethodType contactMethodType = null;
+
+			//Attempt 2
+//			ObjectMapper mapper = new ObjectMapper(); 
+//			
+//			//so that it doesn't choke on the "eventDate" variable in ScheduleEvent
+//			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//			
 //			try {
-//				HttpResponse response = httpclient.execute(httppost);
-//				HttpEntity entity = response.getEntity();
-//
-//				inputStream = entity.getContent();
-//				BufferedReader reader = new BufferedReader(
-//						new InputStreamReader(inputStream, "UTF-8"), 8);
-//				StringBuilder sb = new StringBuilder();
-//
-//				String line = null;
-//
-//				// Read each line of the JSON and build it into a String.
-//				while ((line = reader.readLine()) != null) {
-//					sb.append(line + "\n");
-//				}
-//				jsonString = sb.toString();
-//
-//				// Convert the result String to a JSONObject.
-//				JSONObject jObject = new JSONObject(jsonString);
-//				JSONArray mentorsArray = jObject.getJSONArray(TAG_MENTORS);
-//
-//				// Grab the data for each mentor.
-//				for (int i = 0; i < mentorsArray.length(); i++) {
-//					JSONObject a = mentorsArray.getJSONObject(i);
-//					String name = a.getString(TAG_NAME);
-//					String specialty = a.getString(TAG_SPECIALTY);
-//					String description = a.getString(TAG_DESCRIPTION);
-//
-//					//List<ContactMethod> contactMethodsList = new ArrayList<ContactMethod>();
-//					JSONArray contactMethodsArray = a.getJSONArray(TAG_CONTACT);
-//
-//					JSONObject b = contactMethodsArray.getJSONObject(0);
-//					
-//					ContactMethod contactMethod = null;
-//
-//					if (!b.getString("twitter").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.TWITTER,
-//								b.getString(TAG_TWITTER));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("facebook").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.FACEBOOK,
-//								b.getString(TAG_FACEBOOK));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("email").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.EMAIL, b.getString(TAG_EMAIL));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("linkedin").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.LINKED_IN,
-//								b.getString(TAG_LINKEDIN));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("phone").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.PHONE, b.getString(TAG_PHONE));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					Mentor m = new Mentor(name, specialty, contactMethod,
-//							description);
-//					mentors.add(m);
-//				}
-			ObjectMapper mapper = new ObjectMapper(); 
-			
-			//so that it doesn't joke on the "eventDate" variable in ScheduleEvent
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			
-			try {
-				URL json = new URL(url);
-				JsonNode node = mapper.readTree(json);
-				node = node.get(TAG_MENTORS);
-				
-				TypeReference<List<Mentor>> typeRef = new TypeReference<List<Mentor>>(){};
-				List<Mentor> mentorList = mapper.readValue(node.traverse(), typeRef);
-				
-				for(Mentor m : mentorList){
-					name = m.getName();
-					specialty = m.getSpecialty();
-					description = m.getDescription();
-					
+//				URL json = new URL(url);
+//				JsonNode node = mapper.readTree(json);
+//				node = node.get(TAG_MENTORS);
+//				
+//				TypeReference<List<Mentor>> typeRef = new TypeReference<List<Mentor>>(){};
+//				List<Mentor> mentorList = mapper.readValue(node.traverse(), typeRef);
+//				
+//				for(Mentor m : mentorList){
+//					name = m.getName();
+//					specialty = m.getSpecialty();
+//					description = m.getDescription();
 //					contacts = m.getContactMethodsList();
+////					
+////					for(ContactMethod c : contacts){
+////						contactMethodType = c.getContactMethodType();
+////						String contactActionURL = c.getContactActionURL();
+////						if(contactActionURL.length() > 0){
+////							contactMethod = new ContactMethod(contactMethodType, contactActionURL);
+////						}
+////						
+////					}
+//				}
+//				
+//				Mentor m = new Mentor(name, specialty, contactMethod,
+//						description);
+//				mentors.add(m);
+//				
+//					//contactMethod = m.getContactMethod();
 //					
-//					for(ContactMethod c : contacts){
-//						contactMethodType = c.getContactMethodType();
-//						String contactActionURL = c.getContactActionURL();
-//						if(contactActionURL.length() > 0){
-//							contactMethod = new ContactMethod(contactMethodType, contactActionURL);
-//						}
-//						
-//					}
+////					if (!b.getString("twitter").equals("")) {
+////						contactMethod = new ContactMethod(
+////								ContactMethodType.TWITTER,
+////								b.getString(TAG_TWITTER));
+////						//contactMethodsList.add(contactMethod);
+////					}
+////					if (!b.getString("facebook").equals("")) {
+////						contactMethod = new ContactMethod(
+////								ContactMethodType.FACEBOOK,
+////								b.getString(TAG_FACEBOOK));
+////						//contactMethodsList.add(contactMethod);
+////					}
+////					if (!b.getString("email").equals("")) {
+////						contactMethod = new ContactMethod(
+////								ContactMethodType.EMAIL, b.getString(TAG_EMAIL));
+////						//contactMethodsList.add(contactMethod);
+////					}
+////					if (!b.getString("linkedin").equals("")) {
+////						contactMethod = new ContactMethod(
+////								ContactMethodType.LINKED_IN,
+////								b.getString(TAG_LINKEDIN));
+////						//contactMethodsList.add(contactMethod);
+////					}
+////					if (!b.getString("phone").equals("")) {
+////						contactMethod = new ContactMethod(
+////								ContactMethodType.PHONE, b.getString(TAG_PHONE));
+////						//contactMethodsList.add(contactMethod);
+////					}
+//					
+//			} catch (Exception e) {
+//				// The connection to the server failed. Throw a flag so that we
+//				// can catch it later.
+//				connectionFailed = true;
+//				e.printStackTrace();
+//			}
+//			
+//			if (connectionFailed){
+//				mentors.add(new Mentor("Server Connection Error",
+//						"Please check your connection", contacts, ""));
+//			}
+//
+//			return mentors;
+			
+			
+			DefaultHttpClient httpclient = new DefaultHttpClient(
+					new BasicHttpParams());
+			HttpPost httppost = new HttpPost(url);
+
+			httppost.setHeader("Content-type", "application/json");
+
+			InputStream inputStream = null;
+			String jsonString = null;
+			try {
+				HttpResponse response = httpclient.execute(httppost);
+				HttpEntity entity = response.getEntity();
+
+				inputStream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "UTF-8"), 8);
+				StringBuilder sb = new StringBuilder();
+
+				String line = null;
+
+				// Read each line of the JSON and build it into a String.
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
 				}
-				
-				Mentor m = new Mentor(name, specialty, contactMethod,
-						description);
-				mentors.add(m);
-				
-					//contactMethod = m.getContactMethod();
+				jsonString = sb.toString();
+
+				// Convert the result String to a JSONObject.
+				JSONObject jObject = new JSONObject(jsonString);
+				JSONArray mentorsArray = jObject.getJSONArray(TAG_MENTORS);
+
+				// Grab the data for each mentor.
+				for (int i = 0; i < mentorsArray.length(); i++) {
+					JSONObject a = mentorsArray.getJSONObject(i);
+					String name = a.getString(TAG_NAME);
+					String specialty = a.getString(TAG_SPECIALTY);
+					String description = a.getString(TAG_DESCRIPTION);
+
+					//List<ContactMethod> contactMethodsList = new ArrayList<ContactMethod>();
+					JSONArray contactMethodsArray = a.getJSONArray(TAG_CONTACT);
+
+					JSONObject b = contactMethodsArray.getJSONObject(0);
 					
-//					if (!b.getString("twitter").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.TWITTER,
-//								b.getString(TAG_TWITTER));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("facebook").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.FACEBOOK,
-//								b.getString(TAG_FACEBOOK));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("email").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.EMAIL, b.getString(TAG_EMAIL));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("linkedin").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.LINKED_IN,
-//								b.getString(TAG_LINKEDIN));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("phone").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.PHONE, b.getString(TAG_PHONE));
-//						//contactMethodsList.add(contactMethod);
-//					}
-					
+					ContactMethod contactMethod = null;
+
+					if (!b.getString("twitter").equals("")) {
+						contactMethod = new ContactMethod(
+								ContactMethodType.TWITTER,
+								b.getString(TAG_TWITTER));
+						//contactMethodsList.add(contactMethod);
+					}
+					if (!b.getString("facebook").equals("")) {
+						contactMethod = new ContactMethod(
+								ContactMethodType.FACEBOOK,
+								b.getString(TAG_FACEBOOK));
+						//contactMethodsList.add(contactMethod);
+					}
+					if (!b.getString("email").equals("")) {
+						contactMethod = new ContactMethod(
+								ContactMethodType.EMAIL, b.getString(TAG_EMAIL));
+						//contactMethodsList.add(contactMethod);
+					}
+					if (!b.getString("linkedin").equals("")) {
+						contactMethod = new ContactMethod(
+								ContactMethodType.LINKED_IN,
+								b.getString(TAG_LINKEDIN));
+						//contactMethodsList.add(contactMethod);
+					}
+					if (!b.getString("phone").equals("")) {
+						contactMethod = new ContactMethod(
+								ContactMethodType.PHONE, b.getString(TAG_PHONE));
+						//contactMethodsList.add(contactMethod);
+					}
+					Mentor m = new Mentor(name, specialty, contactMethod,
+							description);
+					mentors.add(m);
+				}
 			} catch (Exception e) {
 				// The connection to the server failed. Throw a flag so that we
 				// can catch it later.
 				connectionFailed = true;
 				e.printStackTrace();
+			} finally {
+				try {
+					if (inputStream != null)
+						inputStream.close();
+				} catch (Exception squish) {
+				}
 			}
 			
 			if (connectionFailed){
 				mentors.add(new Mentor("Server Connection Error",
 						"Please check your connection", null, ""));
 			}
-
+			
 			return mentors;
-			
-			
-//			DefaultHttpClient httpclient = new DefaultHttpClient(
-//					new BasicHttpParams());
-//			HttpPost httppost = new HttpPost(url);
-//
-//			httppost.setHeader("Content-type", "application/json");
-//
-//			InputStream inputStream = null;
-//			String jsonString = null;
-//			try {
-//				HttpResponse response = httpclient.execute(httppost);
-//				HttpEntity entity = response.getEntity();
-//
-//				inputStream = entity.getContent();
-//				BufferedReader reader = new BufferedReader(
-//						new InputStreamReader(inputStream, "UTF-8"), 8);
-//				StringBuilder sb = new StringBuilder();
-//
-//				String line = null;
-//
-//				// Read each line of the JSON and build it into a String.
-//				while ((line = reader.readLine()) != null) {
-//					sb.append(line + "\n");
-//				}
-//				jsonString = sb.toString();
-//
-//				// Convert the result String to a JSONObject.
-//				JSONObject jObject = new JSONObject(jsonString);
-//				JSONArray mentorsArray = jObject.getJSONArray(TAG_MENTORS);
-//
-//				// Grab the data for each mentor.
-//				for (int i = 0; i < mentorsArray.length(); i++) {
-//					JSONObject a = mentorsArray.getJSONObject(i);
-//					String name = a.getString(TAG_NAME);
-//					String specialty = a.getString(TAG_SPECIALTY);
-//					String description = a.getString(TAG_DESCRIPTION);
-//
-//					//List<ContactMethod> contactMethodsList = new ArrayList<ContactMethod>();
-//					JSONArray contactMethodsArray = a.getJSONArray(TAG_CONTACT);
-//
-//					JSONObject b = contactMethodsArray.getJSONObject(0);
-//					
-//					ContactMethod contactMethod = null;
-//
-//					if (!b.getString("twitter").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.TWITTER,
-//								b.getString(TAG_TWITTER));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("facebook").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.FACEBOOK,
-//								b.getString(TAG_FACEBOOK));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("email").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.EMAIL, b.getString(TAG_EMAIL));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("linkedin").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.LINKED_IN,
-//								b.getString(TAG_LINKEDIN));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					if (!b.getString("phone").equals("")) {
-//						contactMethod = new ContactMethod(
-//								ContactMethodType.PHONE, b.getString(TAG_PHONE));
-//						//contactMethodsList.add(contactMethod);
-//					}
-//					Mentor m = new Mentor(name, specialty, contactMethod,
-//							description);
-//					mentors.add(m);
-//				}
-//			} catch (Exception e) {
-//				// The connection to the server failed. Throw a flag so that we
-//				// can catch it later.
-//				connectionFailed = true;
-//				e.printStackTrace();
-//			} finally {
-//				try {
-//					if (inputStream != null)
-//						inputStream.close();
-//				} catch (Exception squish) {
-//				}
-//			}
 		}
 	}
 

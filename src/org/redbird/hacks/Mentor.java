@@ -35,20 +35,6 @@ public class Mentor implements Serializable, Comparable<Mentor> {
 //		this.description = description;
 //	}
 
-	@JsonCreator
-	public Mentor(@JsonProperty("name") String name,
-			@JsonProperty("specialty") String specialty,
-			List<ContactMethod> contactMethodsList,
-			ContactMethod contactMethod,
-			@JsonProperty("description") String description) {
-		super();
-		this.name = name;
-		this.specialty = specialty;
-		this.contactMethod = contactMethod;
-		this.description = description;
-		this.contactMethodsList = contactMethodsList;
-	}
-
 	public Mentor(String name, String specialty, ContactMethod contactMethod,
 			String description) {
 		super();
