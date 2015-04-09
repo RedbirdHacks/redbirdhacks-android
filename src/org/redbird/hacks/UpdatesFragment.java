@@ -50,6 +50,7 @@ import android.widget.ListView;
 
 public class UpdatesFragment extends Fragment implements OnRefreshListener {
 	private final String url = "http://redbirdhacks.org/json/announcements.json";
+	
 	private ListView listViewUpdates;
 	private List<Updates> legendList;
 	private View rootView;
@@ -92,97 +93,38 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener {
 		protected UpdatesInfoFromJSON doInBackground(String... url) {
 			connectionFailed = false;
 			
-			ObjectMapper mapper = new ObjectMapper(); 
+//			ObjectMapper mapper = new ObjectMapper(); 
 			
 			//so that it doesn't joke on the "eventDate" variable in ScheduleEvent
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			
-			try {
-				URL json = new URL(url[0]);
-				JsonNode node = mapper.readTree(json);
-				node = node.get(TAG_UPDATES);
-				
-				TypeReference<List<Updates>> typeRef = new TypeReference<List<Updates>>(){};
-				List<Updates> updatesList = mapper.readValue(node.traverse(), typeRef);
-				
-				updatesInfo = new UpdatesInfoFromJSON();
-				updatesInfo.updatesText = new String[updatesList.size()];
-				updatesInfo.updatesDate = new String[updatesList.size()];
-				
-				for(int i = 0; i < updatesList.size(); i++){
-					Updates u = updatesList.get(i);
-					
-					long updatesTime = Long.parseLong(u.getDate());
-					String updatesText = u.getText();
-//					from = Long.parseLong(e.getFromTime());
-//					to = Long.parseLong(e.getToTime());
-//					title = e.getEventTitle();
-//					description = e.getEventDescription();
-					
-					// Convert epoch time to a Date.
-					// Unix epoch time is measured in seconds. Multiply by 1000
-					// for milliseconds
-					cal.setTimeInMillis(updatesTime * 1000);
-					String updatesDate = DateUtils.getRelativeDateTimeString(
-							getActivity().getBaseContext(),
-							cal.getTimeInMillis(), DateUtils.SECOND_IN_MILLIS,
-							DateUtils.WEEK_IN_MILLIS,
-							DateUtils.FORMAT_SHOW_TIME).toString();
-					
-					updatesInfo.updatesText[i] = updatesText;
-					updatesInfo.updatesDate[i] = updatesDate;
-				}
-			} catch (Exception e) {
-				connectionFailed = true;
-				e.printStackTrace();
-			}			
-			
-//			DefaultHttpClient httpclient = new DefaultHttpClient(
-//					new BasicHttpParams());
-//			HttpPost httppost = new HttpPost(url[0]);
-//
-//			httppost.setHeader("Content-type", "application/json");
-//
-//			InputStream inputStream = null;
-//			String jsonString = null;
+//			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+//			
 //			try {
-//				HttpResponse response = httpclient.execute(httppost);
-//				HttpEntity entity = response.getEntity();
-//
-//				inputStream = entity.getContent();
-//				BufferedReader reader = new BufferedReader(
-//						new InputStreamReader(inputStream, "UTF-8"), 8);
-//				StringBuilder sb = new StringBuilder();
-//
-//				String line = null;
-//
-//				// Read each line of the JSON and build it into a String.
-//				while ((line = reader.readLine()) != null) {
-//					sb.append(line + "\n");
-//				}
-//				jsonString = sb.toString();
-//
-//				// Convert the result String to a JSONObject.
-//				JSONObject jObject = new JSONObject(jsonString);
-//
-//				// Updates is an array that contains each individual update.
-//				// Set the "updates" tag to a JSONArray
-//
-//				JSONArray updates = jObject.getJSONArray(TAG_UPDATES);
+//				URL json = new URL(url[0]);
+//				JsonNode node = mapper.readTree(json);
+//				node = node.get(TAG_UPDATES);
+//				
+//				TypeReference<List<Updates>> typeRef = new TypeReference<List<Updates>>(){};
+//				List<Updates> updatesList = mapper.readValue(node.traverse(), typeRef);
+//				
 //				updatesInfo = new UpdatesInfoFromJSON();
-//				updatesInfo.updatesText = new String[updates.length()];
-//				updatesInfo.updatesDate = new String[updates.length()];
-//
-//				// For each update within the updates JSONArray, grab the
-//				// text and the date.
-//
-//				for (int i = 0; i < updates.length(); i++) {
-//					JSONObject a = updates.getJSONObject(i);
-//					long updatesTime = a.getLong(TAG_UPDATES_DATE);
-//
+//				updatesInfo.updatesText = new String[updatesList.size()];
+//				updatesInfo.updatesDate = new String[updatesList.size()];
+//				
+//				for(int i = 0; i < updatesList.size(); i++){
+//					Updates u = updatesList.get(i);
+//					
+//					long updatesTime = Long.parseLong(u.getDate());
+//					String updatesText = u.getText();
+//					
+//					// Used for the notification service. The newest update found will be broadcast to the service.
 //					if (i == 0)
-//						newestUpdateTime = a.getLong(TAG_UPDATES_DATE);
-//
+//						newestUpdateTime = updatesTime;
+//					
+////					from = Long.parseLong(e.getFromTime());
+////					to = Long.parseLong(e.getToTime());
+////					title = e.getEventTitle();
+////					description = e.getEventDescription();
+//					
 //					// Convert epoch time to a Date.
 //					// Unix epoch time is measured in seconds. Multiply by 1000
 //					// for milliseconds
@@ -192,23 +134,87 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener {
 //							cal.getTimeInMillis(), DateUtils.SECOND_IN_MILLIS,
 //							DateUtils.WEEK_IN_MILLIS,
 //							DateUtils.FORMAT_SHOW_TIME).toString();
-//
-//					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
+//					
+//					updatesInfo.updatesText[i] = updatesText;
 //					updatesInfo.updatesDate[i] = updatesDate;
 //				}
 //			} catch (Exception e) {
-//				// The connection to the server failed. Throw a flag so that we
-//				// can
-//				// catch it in onPostExecute().
 //				connectionFailed = true;
 //				e.printStackTrace();
-//			} finally {
-//				try {
-//					if (inputStream != null)
-//						inputStream.close();
-//				} catch (Exception squish) {
-//				}
-//			}
+//			}			
+			
+			DefaultHttpClient httpclient = new DefaultHttpClient(
+					new BasicHttpParams());
+			HttpPost httppost = new HttpPost(url[0]);
+
+			httppost.setHeader("Content-type", "application/json");
+
+			InputStream inputStream = null;
+			String jsonString = null;
+			try {
+				HttpResponse response = httpclient.execute(httppost);
+				HttpEntity entity = response.getEntity();
+
+				inputStream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "UTF-8"), 8);
+				StringBuilder sb = new StringBuilder();
+
+				String line = null;
+
+				// Read each line of the JSON and build it into a String.
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				jsonString = sb.toString();
+
+				// Convert the result String to a JSONObject.
+				JSONObject jObject = new JSONObject(jsonString);
+
+				// Updates is an array that contains each individual update.
+				// Set the "updates" tag to a JSONArray
+
+				JSONArray updates = jObject.getJSONArray(TAG_UPDATES);
+				updatesInfo = new UpdatesInfoFromJSON();
+				updatesInfo.updatesText = new String[updates.length()];
+				updatesInfo.updatesDate = new String[updates.length()];
+
+				// For each update within the updates JSONArray, grab the
+				// text and the date.
+
+				for (int i = 0; i < updates.length(); i++) {
+					JSONObject a = updates.getJSONObject(i);
+					long updatesTime = a.getLong(TAG_UPDATES_DATE);
+
+					if (i == 0)
+						newestUpdateTime = a.getLong(TAG_UPDATES_DATE);
+
+					// Convert epoch time to a Date.
+					// Unix epoch time is measured in seconds. Multiply by 1000
+					// for milliseconds
+					cal.setTimeInMillis(updatesTime * 1000);
+					String updatesDate = DateUtils.getRelativeDateTimeString(
+							getActivity().getBaseContext(),
+							cal.getTimeInMillis(), DateUtils.SECOND_IN_MILLIS,
+							DateUtils.WEEK_IN_MILLIS,
+							DateUtils.FORMAT_SHOW_TIME).toString();
+
+					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
+					updatesInfo.updatesDate[i] = updatesDate;
+				}
+			} catch (Exception e) {
+				// The connection to the server failed. Throw a flag so that we
+				// can
+				// catch it in onPostExecute().
+				connectionFailed = true;
+				e.printStackTrace();
+			} finally {
+				try {
+					if (inputStream != null)
+						inputStream.close();
+				} catch (Exception squish) {
+				}
+			}
 			return updatesInfo;
 
 		}

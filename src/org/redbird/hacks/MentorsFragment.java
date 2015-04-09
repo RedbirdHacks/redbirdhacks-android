@@ -126,6 +126,7 @@ public class MentorsFragment extends ListFragment {
 				holder = (MentorHolder) view.getTag();
 			}
 
+			try{
 			Mentor mentor = mentors.get(position);
 			holder.tvMentorName.setText(mentor.getName());
 			
@@ -169,7 +170,10 @@ public class MentorsFragment extends ListFragment {
 					}
 				});
 			}
-//			}
+			} catch(Exception e)
+			{
+				Log.d("APP", e.getMessage());
+			}
 			return view;
 		}
 
