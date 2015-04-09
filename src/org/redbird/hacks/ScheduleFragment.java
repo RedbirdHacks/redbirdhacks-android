@@ -20,6 +20,9 @@ import org.redbird.hacks.SimpleSectionAdapter.Sectionizer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,19 +34,25 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ScheduleFragment extends android.support.v4.app.ListFragment {
+public class ScheduleFragment extends android.support.v4.app.ListFragment implements OnRefreshListener {
 
 	private View fragmentView;
 
 	private List<ScheduleEvent> eventsList = new ArrayList<ScheduleEvent>();
 
+	private SwipeRefreshLayout	swipeLayout;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		fragmentView = inflater.inflate(R.layout.schdule_fragment_layout,
+		fragmentView = inflater.inflate(R.layout.schedule_fragment_layout,
 				container, false);
-
+		swipeLayout = (SwipeRefreshLayout) fragmentView
+				.findViewById(R.id.schedule_swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorSchemeResources(R.color.redBirdHacksRed,
+				R.color.darkred, R.color.darkred, R.color.white);
 		return fragmentView;
 	}
 
@@ -274,5 +283,47 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 			// return events;
 
 		}
+	}
+	
+
+	/**
+	 * This method will refresh the list view with the latest updates.
+	 */
+	private void getUpdates() {
+		swipeLayout.setRefreshing(true);
+		Log.d("APP", "Refreshing the adapter");
+		
+			try {
+				eventsList.clear();
+				eventsList.addAll(new RetrieveEvents().execute().get());
+
+				Collections.sort(eventsList);
+
+				ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(),
+						R.layout.schedule_list_item, eventsList);
+
+				ScheduleSectionizer scheduleSectionizer = new ScheduleSectionizer();
+				SimpleSectionAdapter<ScheduleEvent> sectionAdapter = new SimpleSectionAdapter<ScheduleEvent>(
+						getActivity(), scheduleAdapter,
+						R.layout.schedule_event_day_header, R.id.tvScheduleEventDay,
+						scheduleSectionizer);
+				setListAdapter(sectionAdapter);
+
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			swipeLayout.setRefreshing(false);
+
+	}
+
+	@Override
+	public void onRefresh()
+	{
+		getUpdates();
 	}
 }

@@ -41,6 +41,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,18 +52,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MentorsFragment extends ListFragment {
+public class MentorsFragment extends ListFragment implements OnRefreshListener {
 
 	private View fragmentView;
 
 	private List<Mentor> mentorList = new ArrayList<Mentor>();
+
+	private SwipeRefreshLayout	swipeLayout;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.mentors_fragment_layout,
 				container, false);
-
+		swipeLayout = (SwipeRefreshLayout) fragmentView
+				.findViewById(R.id.mentors_swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorSchemeResources(R.color.redBirdHacksRed,
+				R.color.darkred, R.color.darkred, R.color.white);
 		return fragmentView;
 	}
 
@@ -371,5 +379,47 @@ public class MentorsFragment extends ListFragment {
 		public String getSectionTitleForItem(Mentor instance) {
 			return instance.getSpecialty();
 		}
+	}
+	
+	/**
+	 * This method will refresh the list view with the latest updates.
+	 */
+	private void getUpdates() {
+		swipeLayout.setRefreshing(true);
+		Log.d("APP", "Refreshing the adapter");
+		
+			try {
+				mentorList.clear();
+				mentorList.addAll(new RetrieveMentors().execute().get());
+
+				Collections.sort(mentorList);
+				
+				MentorAdapter mentorAdapter = new MentorAdapter(getActivity(),
+						R.layout.methods_list_item, mentorList);
+
+				MentorSectionizer mentorSectionizer = new MentorSectionizer();
+
+				SimpleSectionAdapter<Mentor> sectionAdapter = new SimpleSectionAdapter<Mentor>(
+						getActivity(), mentorAdapter, R.layout.mentor_section_header,
+						R.id.tvMentorSectionHeaderTitle, mentorSectionizer);
+				setListAdapter(sectionAdapter);
+
+				mentorAdapter.notifyDataSetChanged();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		swipeLayout.setRefreshing(false);
+
+	}
+
+	@Override
+	public void onRefresh()
+	{
+		getUpdates();
 	}
 }

@@ -4,13 +4,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white" >
-    
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mentors_swipe_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+        
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:paddingTop="0dp" >
     </ListView>
-    
+ </android.support.v4.widget.SwipeRefreshLayout>   
 
 </LinearLayout>
