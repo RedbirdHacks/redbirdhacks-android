@@ -106,7 +106,7 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 				"h:mm");
 		private Calendar cal = Calendar.getInstance();
 
-		@Override
+		@Override 
 		protected List<ScheduleEvent> doInBackground(Void... params) {
 			List<ScheduleEvent> events = new ArrayList<ScheduleEvent>();
 			final String url = "http://redbirdhacks.org/json/events.json";

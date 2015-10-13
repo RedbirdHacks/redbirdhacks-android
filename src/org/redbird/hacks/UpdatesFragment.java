@@ -168,7 +168,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener {
 	 * 
 	 * @author MJ Havens <me@mjhavens.com>
 	 * 
-	 */ 
+	 */
 	private class UpdatesInfoFromJSON {
 		String updatesText[];
 		String updatesDate[];

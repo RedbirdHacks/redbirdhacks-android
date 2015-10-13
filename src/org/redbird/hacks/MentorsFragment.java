@@ -211,7 +211,7 @@ public class MentorsFragment extends ListFragment {
 						new InputStreamReader(inputStream, "UTF-8"), 8);
 				StringBuilder sb = new StringBuilder();
 
-				String line = null; 
+				String line = null;
 
 				// Read each line of the JSON and build it into a String.
 				while ((line = reader.readLine()) != null) {
