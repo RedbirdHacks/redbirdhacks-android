@@ -96,20 +96,9 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 		}
 	}
 
-	/**
-	 * TO DO: Use the Jackson library to parse JSON.
-	 * 
-	 * @author MJ
-	 * 
-	 */
 	private class RetrieveEvents extends
 			AsyncTask<Void, Void, List<ScheduleEvent>> {
 		private final String TAG_EVENTS = "events";
-//		private final String TAG_FROM = "from";
-//		private final String TAG_TO = "to";
-//		private final String TAG_TIME = "time";
-//		private final String TAG_TITLE = "title";
-//		private final String TAG_DESCRIPTION = "description";
 		private boolean connectionFailed;
 		private SimpleDateFormat fromTime_date_format = new SimpleDateFormat(
 				"h:mm");
@@ -126,6 +115,8 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 			Long from = null, to = null;
 			String title = null, description = null;
 
+			//Using the Jackson library to parse through JSON
+			
 			// Resources:
 			// http://www.mkyong.com/java/jackson-streaming-api-to-read-and-write-json/
 			// http://wiki.fasterxml.com/JacksonInFiveMinutes
@@ -136,7 +127,7 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 			// http://www.studytrails.com/java/json/java-jackson-Serialization-list.jsp
 			ObjectMapper mapper = new ObjectMapper(); 
 			
-			//so that it doesn't joke on the "eventDate" variable in ScheduleEvent
+			//so that it doesn't choke on the "eventDate" variable in ScheduleEvent
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			
 			try {
@@ -186,93 +177,6 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 						"Please check your connection", "", "", ""));
 
 			return events;
-
-			// DefaultHttpClient httpclient = new DefaultHttpClient(
-			// new BasicHttpParams());
-			// HttpPost httppost = new HttpPost(url);
-			//
-			// httppost.setHeader("Content-type", "application/json");
-			//
-			// InputStream inputStream = null;
-			// String jsonString = null;
-			// try
-			// {
-			// HttpResponse response = httpclient.execute(httppost);
-			// HttpEntity entity = response.getEntity();
-			//
-			// inputStream = entity.getContent();
-			// BufferedReader reader = new BufferedReader(
-			// new InputStreamReader(inputStream, "UTF-8"), 8);
-			// StringBuilder sb = new StringBuilder();
-			//
-			// String line = null;
-			//
-			// // Read each line of the JSON and build it into a String.
-			// while ((line = reader.readLine()) != null)
-			// {
-			// sb.append(line + "\n");
-			// }
-			// jsonString = sb.toString();
-			//
-			// // Convert the result String to a JSONObject.
-			// JSONObject jObject = new JSONObject(jsonString);
-			// JSONArray eventsArray = jObject.getJSONArray(TAG_EVENTS);
-			//
-			// // Grab each event.
-			// for (int i = 0; i < eventsArray.length(); i++)
-			// {
-			// JSONObject a = eventsArray.getJSONObject(i);
-			// Long from = a.getLong(TAG_FROM);
-			// Long to = a.getLong(TAG_TO);
-			// String title = a.getString(TAG_TITLE);
-			// String description = a.getString(TAG_DESCRIPTION);
-			//
-			// //Convert epoch time to a Date.
-			// //Unix epoch time is measured in seconds. Multiply by 1000 for
-			// milliseconds
-			// cal.setTimeInMillis(from * 1000);
-			// String month = cal.getDisplayName(Calendar.MONTH, 2, Locale.US);
-			// String dayOfMonth =
-			// String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-			//
-			// // Get the from time format and convert from milliseconds to a
-			// time format.
-			// String fromTime = fromTime_date_format.format(cal.getTime());
-			//
-			// // Get the to time and convert from milliseconds to a time
-			// format.
-			// cal.setTimeInMillis(to * 1000);
-			// String toTime = toTime_date_format.format(cal.getTime());
-			//
-			// //Add the event to the event list.
-			// events.add(new ScheduleEvent(title, description, fromTime,
-			// toTime, month + " " + dayOfMonth));
-			// }
-			// }
-			// catch (Exception e)
-			// {
-			// // The connection to the server failed. Throw a flag so that we
-			// can catch it later.
-			// connectionFailed = true;
-			// e.printStackTrace();
-			// }
-			// finally
-			// {
-			// try
-			// {
-			// if (inputStream != null)
-			// inputStream.close();
-			// }
-			// catch (Exception squish)
-			// {
-			// }
-			// }
-			// if(connectionFailed)
-			// events.add(new ScheduleEvent("Could not connect to the server",
-			// "Please check your connection", "", "", ""));
-			//
-			// return events;
-
 		}
 	}
 }

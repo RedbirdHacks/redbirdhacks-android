@@ -174,12 +174,7 @@ public class MentorsFragment extends ListFragment {
 		}
 
 	}
-
-	/**
-	 * TO DO: Use the Jackson library to parse JSON.
-	 * @author MJ
-	 *
-	 */
+	
 	private class RetrieveMentors extends AsyncTask<Void, Void, List<Mentor>> {
 		private final String TAG_MENTORS = "mentors";
 		private final String TAG_NAME = "name";
@@ -197,64 +192,7 @@ public class MentorsFragment extends ListFragment {
 		protected List<Mentor> doInBackground(Void... params) {
 			List<Mentor> mentors = new ArrayList<Mentor>();
 			final String url = "http://redbirdhacks.org/json/mentors.json";
-			connectionFailed = false;
-		
-//			String name = null, specialty = null, description = null;
-//			ContactMethod contactMethod = null;
-//			List<ContactMethod> contacts = null;
-//			ContactMethodType contactMethodType = null;
-
-			//Attempt 2
-//			ObjectMapper mapper = new ObjectMapper(); 
-//			
-//			//so that it doesn't choke on the "eventDate" variable in ScheduleEvent
-//			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//			
-//			try {
-//				URL json = new URL(url);
-//				JsonNode node = mapper.readTree(json);
-//				node = node.get(TAG_MENTORS);
-//				
-//				TypeReference<List<Mentor>> typeRef = new TypeReference<List<Mentor>>(){};
-//				List<Mentor> mentorList = mapper.readValue(node.traverse(), typeRef);
-//				
-//				for(Mentor m : mentorList){
-//					name = m.getName();
-//					specialty = m.getSpecialty();
-//					description = m.getDescription();
-//					contacts = m.getContactMethodsList();
-////					
-////					for(ContactMethod c : contacts){
-////						contactMethodType = c.getContactMethodType();
-////						String contactActionURL = c.getContactActionURL();
-////						if(contactActionURL.length() > 0){
-////							contactMethod = new ContactMethod(contactMethodType, contactActionURL);
-////						}
-////						
-////					}
-//				}
-//				
-//				Mentor m = new Mentor(name, specialty, contactMethod,
-//						description);
-//				mentors.add(m);
-//				
-//				//contactMethod = m.getContactMethod();
-//					
-//					
-//			} catch (Exception e) {
-//				// The connection to the server failed. Throw a flag so that we
-//				// can catch it later.
-//				connectionFailed = true;
-//				e.printStackTrace();
-//			}
-//			
-//			if (connectionFailed){
-//				mentors.add(new Mentor("Server Connection Error",
-//						"Please check your connection", contacts, ""));
-//			}
-//
-//			return mentors;
-			
+			connectionFailed = false;			
 			
 			DefaultHttpClient httpclient = new DefaultHttpClient(
 					new BasicHttpParams());
