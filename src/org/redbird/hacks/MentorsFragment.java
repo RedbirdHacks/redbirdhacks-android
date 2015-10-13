@@ -7,16 +7,11 @@
 package org.redbird.hacks;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
@@ -28,19 +23,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.redbird.hacks.SimpleSectionAdapter.Sectionizer;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,18 +40,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MentorsFragment extends ListFragment {
+public class MentorsFragment extends ListFragment implements OnRefreshListener {
 
 	private View fragmentView;
 
 	private List<Mentor> mentorList = new ArrayList<Mentor>();
+
+	private SwipeRefreshLayout	swipeLayout;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		fragmentView = inflater.inflate(R.layout.mentors_fragment_layout,
 				container, false);
-
+		swipeLayout = (SwipeRefreshLayout) fragmentView
+				.findViewById(R.id.mentors_swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorSchemeResources(R.color.redBirdHacksRed,
+				R.color.darkred, R.color.darkred, R.color.white);
 		return fragmentView;
 	}
 
@@ -126,6 +122,7 @@ public class MentorsFragment extends ListFragment {
 				holder = (MentorHolder) view.getTag();
 			}
 
+			try{
 			Mentor mentor = mentors.get(position);
 			holder.tvMentorName.setText(mentor.getName());
 			
@@ -169,7 +166,10 @@ public class MentorsFragment extends ListFragment {
 					}
 				});
 			}
-//			}
+			} catch(Exception e)
+			{
+				Log.d("APP", e.getMessage());
+			}
 			return view;
 		}
 
@@ -305,5 +305,47 @@ public class MentorsFragment extends ListFragment {
 		public String getSectionTitleForItem(Mentor instance) {
 			return instance.getSpecialty();
 		}
+	}
+	
+	/**
+	 * This method will refresh the list view with the latest updates.
+	 */
+	private void getUpdates() {
+		swipeLayout.setRefreshing(true);
+		Log.d("APP", "Refreshing the adapter");
+		
+			try {
+				mentorList.clear();
+				mentorList.addAll(new RetrieveMentors().execute().get());
+
+				Collections.sort(mentorList);
+				
+				MentorAdapter mentorAdapter = new MentorAdapter(getActivity(),
+						R.layout.methods_list_item, mentorList);
+
+				MentorSectionizer mentorSectionizer = new MentorSectionizer();
+
+				SimpleSectionAdapter<Mentor> sectionAdapter = new SimpleSectionAdapter<Mentor>(
+						getActivity(), mentorAdapter, R.layout.mentor_section_header,
+						R.id.tvMentorSectionHeaderTitle, mentorSectionizer);
+				setListAdapter(sectionAdapter);
+
+				mentorAdapter.notifyDataSetChanged();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		swipeLayout.setRefreshing(false);
+
+	}
+
+	@Override
+	public void onRefresh()
+	{
+		getUpdates();
 	}
 }

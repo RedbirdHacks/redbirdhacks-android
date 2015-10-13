@@ -51,8 +51,8 @@ public class NotificationService extends Service
 {
 
 	private String						TAG				= "APP";
-	private final String				updatesURL		= "http://mjhavens.com/announcements.json";
-	private final String				eventsURL		= "http://mjhavens.com/events.json";
+	private final String				updatesURL		= "http://redbirdhacks.org/json/announcements.json";
+	private final String				eventsURL		= "http://redbirdhacks.org/json/events.json";
 	private Handler						handler			= new Handler();
 	private Runnable					runnable;
 	private long						oldUpdateTime	= -1;

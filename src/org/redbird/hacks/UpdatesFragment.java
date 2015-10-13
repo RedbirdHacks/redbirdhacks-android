@@ -14,13 +14,10 @@ package org.redbird.hacks;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,11 +26,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -50,6 +42,7 @@ import android.widget.ListView;
 
 public class UpdatesFragment extends Fragment implements OnRefreshListener {
 	private final String url = "http://redbirdhacks.org/json/announcements.json";
+	
 	private ListView listViewUpdates;
 	private List<Updates> legendList;
 	private View rootView;
@@ -67,10 +60,16 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener {
 				.findViewById(R.id.swipe_container);
 		swipeLayout.setOnRefreshListener(this);
 		swipeLayout.setColorSchemeResources(R.color.redBirdHacksRed,
-				R.color.orange, R.color.darkred, R.color.white);
+				R.color.darkred, R.color.darkred, R.color.white);
 		return rootView;
 	}
 
+	/**
+	 * TO DO: Use the Jackson library to parse JSON.
+	 * 
+	 * @author MJ
+	 * 
+	 */
 	private class JSONUpdates extends
 			AsyncTask<String, Void, UpdatesInfoFromJSON> {
 		private UpdatesInfoFromJSON updatesInfo;
@@ -84,31 +83,54 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener {
 
 		@Override
 		protected UpdatesInfoFromJSON doInBackground(String... url) {
-			connectionFailed = false;
+			connectionFailed = false;		
 			
-			ObjectMapper mapper = new ObjectMapper(); 
-			
-			//so that it doesn't choke on the "eventDate" variable in ScheduleEvent
-			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			
+			DefaultHttpClient httpclient = new DefaultHttpClient(
+					new BasicHttpParams());
+			HttpPost httppost = new HttpPost(url[0]);
+
+			httppost.setHeader("Content-type", "application/json");
+
+			InputStream inputStream = null;
+			String jsonString = null;
 			try {
-				URL json = new URL(url[0]);
-				JsonNode node = mapper.readTree(json);
-				node = node.get(TAG_UPDATES);
-				
-				TypeReference<List<Updates>> typeRef = new TypeReference<List<Updates>>(){};
-				List<Updates> updatesList = mapper.readValue(node.traverse(), typeRef);
-				
+				HttpResponse response = httpclient.execute(httppost);
+				HttpEntity entity = response.getEntity();
+
+				inputStream = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(inputStream, "UTF-8"), 8);
+				StringBuilder sb = new StringBuilder();
+
+				String line = null;
+
+				// Read each line of the JSON and build it into a String.
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				jsonString = sb.toString();
+
+				// Convert the result String to a JSONObject.
+				JSONObject jObject = new JSONObject(jsonString);
+
+				// Updates is an array that contains each individual update.
+				// Set the "updates" tag to a JSONArray
+
+				JSONArray updates = jObject.getJSONArray(TAG_UPDATES);
 				updatesInfo = new UpdatesInfoFromJSON();
-				updatesInfo.updatesText = new String[updatesList.size()];
-				updatesInfo.updatesDate = new String[updatesList.size()];
-				
-				for(int i = 0; i < updatesList.size(); i++){
-					Updates u = updatesList.get(i);
-					
-					long updatesTime = Long.parseLong(u.getDate());
-					String updatesText = u.getText();
-					
+				updatesInfo.updatesText = new String[updates.length()];
+				updatesInfo.updatesDate = new String[updates.length()];
+
+				// For each update within the updates JSONArray, grab the
+				// text and the date.
+
+				for (int i = 0; i < updates.length(); i++) {
+					JSONObject a = updates.getJSONObject(i);
+					long updatesTime = a.getLong(TAG_UPDATES_DATE);
+
+					if (i == 0)
+						newestUpdateTime = a.getLong(TAG_UPDATES_DATE);
+
 					// Convert epoch time to a Date.
 					// Unix epoch time is measured in seconds. Multiply by 1000
 					// for milliseconds
@@ -118,15 +140,23 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener {
 							cal.getTimeInMillis(), DateUtils.SECOND_IN_MILLIS,
 							DateUtils.WEEK_IN_MILLIS,
 							DateUtils.FORMAT_SHOW_TIME).toString();
-					
-					updatesInfo.updatesText[i] = updatesText;
+
+					updatesInfo.updatesText[i] = a.getString(TAG_UPDATES_TEXT);
 					updatesInfo.updatesDate[i] = updatesDate;
 				}
 			} catch (Exception e) {
+				// The connection to the server failed. Throw a flag so that we
+				// can
+				// catch it in onPostExecute().
 				connectionFailed = true;
 				e.printStackTrace();
+			} finally {
+				try {
+					if (inputStream != null)
+						inputStream.close();
+				} catch (Exception squish) {
+				}
 			}
-			
 			return updatesInfo;
 
 		}
@@ -187,8 +217,7 @@ public class UpdatesFragment extends Fragment implements OnRefreshListener {
 	public void onResume() {
 		super.onResume();
 
-		// Get the JSON updates in the background and set each update to a
-		// ListItem.
+		// Get the JSON updates each time the fragment is resumed.
 		getUpdates();
 
 	}
