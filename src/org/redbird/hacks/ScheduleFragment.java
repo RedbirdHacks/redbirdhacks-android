@@ -167,7 +167,7 @@ public class ScheduleFragment extends android.support.v4.app.ListFragment {
 					events.add(new ScheduleEvent(title, description, fromTime,
 							toTime, month + " " + dayOfMonth));
 				}
-			} catch (Exception e) {
+			} catch (Exception e) { 
 				connectionFailed = true;
 				e.printStackTrace();
 			}
